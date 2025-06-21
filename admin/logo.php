@@ -398,6 +398,8 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                     </div>
                 </div>
             </div>
+            <?php include 'include/footer.php'; ?>
+        <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 
@@ -405,7 +407,17 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
     <script src="assets/js/core/popper.min.js"></script>
     <script src="assets/js/core/bootstrap.min.js"></script>
     <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="assets/js/plugin/chart.js/chart.min.js"></script>
+    <script src="assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script src="assets/js/plugin/chart-circle/circles.min.js"></script>
+    <script src="assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/world.js"></script>
+    <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
     <script src="assets/js/kaiadmin.min.js"></script>
+    <script src="assets/js/setting-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">    <!-- iZitoast JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/js/bootstrap-switch.min.js"></script>
     <script>

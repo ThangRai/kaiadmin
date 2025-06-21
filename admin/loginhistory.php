@@ -171,6 +171,8 @@ try {
                 </div>
             </div>
             <?php include 'include/footer.php'; ?>
+                    <?php include 'include/custom-template.php'; ?>
+
         </div>
     </div>
 
@@ -178,14 +180,16 @@ try {
     <script src="assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="assets/js/core/popper.min.js"></script>
     <script src="assets/js/core/bootstrap.min.js"></script>
-    <!-- jQuery Scrollbar -->
     <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-    <!-- Datatables -->
+    <script src="assets/js/plugin/chart.js/chart.min.js"></script>
+    <script src="assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script src="assets/js/plugin/chart-circle/circles.min.js"></script>
     <script src="assets/js/plugin/datatables/datatables.min.js"></script>
-    <!-- Sweet Alert -->
+    <script src="assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/world.js"></script>
     <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-    <!-- Kaiadmin JS -->
     <script src="assets/js/kaiadmin.min.js"></script>
+    <script src="assets/js/setting-demo.js"></script>
     <!-- iZitoast JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script>

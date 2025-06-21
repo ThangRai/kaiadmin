@@ -496,8 +496,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_visible'])) {
                     </div>
                 </form>
             </div>
+            
         </div>
     </div>
+    <?php include 'include/footer.php'; ?>
+        <?php include 'include/custom-template.php'; ?>
 
     <!-- Core JS Files -->
     <script src="assets/js/core/jquery-3.7.1.min.js"></script>

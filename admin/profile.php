@@ -27,19 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $username = trim($_POST['username']);
     $phone = trim($_POST['phone']);
-    $address = trim($_POST['address']);
+    $province = trim($_POST['province']);
+    $district = trim($_POST['district']);
+    $ward = trim($_POST['ward']);
+    $address_detail = trim($_POST['address_detail']);
     $password = trim($_POST['password'] ?? '');
 
     // Xử lý ảnh đại diện
     $avatar = $user['avatar'];
     if (!empty($_FILES['avatar']['name'])) {
         $uploadDir = 'uploads/';
-        // Tạo thư mục nếu chưa tồn tại
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
 
-        // Kiểm tra định dạng file
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
         $fileExtension = strtolower(pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION));
         if (!in_array($fileExtension, $allowedExtensions)) {
@@ -49,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Kiểm tra kích thước file (giới hạn 2MB)
         if ($_FILES['avatar']['size'] > 2 * 1024 * 1024) {
             $_SESSION['toast_message'] = 'Kích thước file không được vượt quá 2MB.';
             $_SESSION['toast_type'] = 'error';
@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Tạo tên file duy nhất
         $avatarName = time() . '_' . basename($_FILES['avatar']['name']);
         $avatarPath = $uploadDir . $avatarName;
 
@@ -72,19 +71,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Nếu người dùng nhập mật khẩu mới
         if (!empty($password)) {
-            $stmt = $pdo->prepare("UPDATE users SET fullname = ?, email = ?, username = ?, phone = ?, address = ?, avatar = ?, password = ? WHERE id = ?");
-            $result = $stmt->execute([$fullname, $email, $username, $phone, $address, $avatar, $password, $userId]);
+            $stmt = $pdo->prepare("UPDATE users SET fullname = ?, email = ?, username = ?, phone = ?, province = ?, district = ?, ward = ?, address_detail = ?, avatar = ?, password = ? WHERE id = ?");
+            $result = $stmt->execute([$fullname, $email, $username, $phone, $province, $district, $ward, $address_detail, $avatar, $password, $userId]);
         } else {
-            $stmt = $pdo->prepare("UPDATE users SET fullname = ?, email = ?, username = ?, phone = ?, address = ?, avatar = ? WHERE id = ?");
-            $result = $stmt->execute([$fullname, $email, $username, $phone, $address, $avatar, $userId]);
+            $stmt = $pdo->prepare("UPDATE users SET fullname = ?, email = ?, username = ?, phone = ?, province = ?, district = ?, ward = ?, address_detail = ?, avatar = ? WHERE id = ?");
+            $result = $stmt->execute([$fullname, $email, $username, $phone, $province, $district, $ward, $address_detail, $avatar, $userId]);
         }
 
         if ($result) {
             $_SESSION['toast_message'] = 'Cập nhật thông tin thành công!';
             $_SESSION['toast_type'] = 'success';
-            // Cập nhật session
             $_SESSION['fullname'] = $fullname;
             $_SESSION['email'] = $email;
             $_SESSION['avatar'] = $avatar;
@@ -138,7 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="assets/css/demo.css" />
     <style>
-        /* Định vị nút Cập nhật cố định */
         .fixed-update-btn {
             position: fixed;
             top: 100px;
@@ -154,8 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 padding: 8px 15px;
                 font-size: 14px;
             }
-        }
-        @media (max-width: 768px) {
             .sidebar {
                 display: none;
             }
@@ -177,6 +171,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .nav-item.active > a i,
         .nav-collapse li.active a i {
             color: #ffffff !important;
+        }
+        .loading-spinner {
+            display: none;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -213,8 +211,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
                         </div>
                         <div class="mb-3">
-                            <label>Địa chỉ</label>
-                            <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($user['address'] ?? '') ?>">
+                            <label>Tỉnh/Thành phố</label>
+                            <select name="province" id="province" class="form-control" required>
+                                <option value="">Chọn Tỉnh/Thành phố</option>
+                            </select>
+                            <span class="loading-spinner" id="province-loading">Đang tải...</span>
+                        </div>
+                        <div class="mb-3">
+                            <label>Quận/Huyện</label>
+                            <select name="district" id="district" class="form-control" required>
+                                <option value="">Chọn Quận/Huyện</option>
+                            </select>
+                            <span class="loading-spinner" id="district-loading">Đang tải...</span>
+                        </div>
+                        <div class="mb-3">
+                            <label>Phường/Xã</label>
+                            <select name="ward" id="ward" class="form-control" required>
+                                <option value="">Chọn Phường/Xã</option>
+                            </select>
+                            <span class="loading-spinner" id="ward-loading">Đang tải...</span>
+                        </div>
+                        <div class="mb-3">
+                            <label>Địa chỉ chi tiết</label>
+                            <input type="text" name="address_detail" class="form-control" value="<?= htmlspecialchars($user['address_detail'] ?? '') ?>" placeholder="Số nhà, tên đường...">
                         </div>
                         <div class="mb-3">
                             <label>Ảnh đại diện</label>
@@ -235,66 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </footer>
         </div>
-        <div class="custom-template">
-            <div class="title">Settings</div>
-            <div class="custom-content">
-                <div class="switcher">
-                    <div class="switch-block">
-                        <h4>Logo Header</h4>
-                        <div class="btnSwitch">
-                            <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
-                            <br />
-                            <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
-                            <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
-                        </div>
-                    </div>
-                    <div class="switch-block">
-                        <h4>Navbar Header</h4>
-                        <div class="btnSwitch">
-                            <button type="button" class="changeTopBarColor" data-color="dark"></button>
-                            <button type="button" class="changeTopBarColor" data-color="blue"></button>
-                            <button type="button" class="changeTopBarColor" data-color="purple"></button>
-                            <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
-                            <button type="button" class="changeTopBarColor" data-color="green"></button>
-                            <button type="button" class="changeTopBarColor" data-color="orange"></button>
-                            <button type="button" class="changeTopBarColor" data-color="red"></button>
-                            <button type="button" class="selected changeTopBarColor" data-color="white"></button>
-                            <br />
-                            <button type="button" class="changeTopBarColor" data-color="dark2"></button>
-                            <button type="button" class="changeTopBarColor" data-color="blue2"></button>
-                            <button type="button" class="changeTopBarColor" data-color="purple2"></button>
-                            <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
-                            <button type="button" class="changeTopBarColor" data-color="green2"></button>
-                            <button type="button" class="changeTopBarColor" data-color="orange2"></button>
-                            <button type="button" class="changeTopBarColor" data-color="red2"></button>
-                        </div>
-                    </div>
-                    <div class="switch-block">
-                        <h4>Sidebar</h4>
-                        <div class="btnSwitch">
-                            <button type="button" class="changeSideBarColor" data-color="white"></button>
-                            <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
-                            <button type="button" class="changeSideBarColor" data-color="dark2"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="custom-toggle">
-                <i class="icon-settings"></i>
-            </div>
-        </div>
+        <?php include 'include/custom-template.php'; ?>
     </div>
     <!-- Core JS Files -->
     <script src="assets/js/core/jquery-3.7.1.min.js"></script>
@@ -331,6 +291,107 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $('.nav-item').on('click', function(e) {
                 e.stopPropagation();
             });
+
+            // Hàm hiển thị spinner
+            function showSpinner(id) {
+                $(`#${id}`).show();
+            }
+            function hideSpinner(id) {
+                $(`#${id}`).hide();
+            }
+
+            // Load provinces
+            showSpinner('province-loading');
+            $.getJSON('https://provinces.open-api.vn/api/p/', function(data) {
+                hideSpinner('province-loading');
+                let provinceSelect = $('#province');
+                provinceSelect.append('<option value="">Chọn Tỉnh/Thành phố</option>');
+                $.each(data, function(index, province) {
+                    provinceSelect.append(`<option value="${province.name}" data-code="${province.code}">${province.name}</option>`);
+                });
+                // Set current province
+                provinceSelect.val('<?= htmlspecialchars($user['province'] ?? '') ?>');
+                if ('<?= htmlspecialchars($user['province'] ?? '') ?>' !== '') {
+                    provinceSelect.trigger('change');
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                hideSpinner('province-loading');
+                iziToast.error({
+                    title: 'Lỗi',
+                    message: 'Không thể tải danh sách Tỉnh/Thành phố: ' + textStatus,
+                    position: 'topRight',
+                    timeout: 5000
+                });
+            });
+
+            // Load districts when province changes
+            $('#province').change(function() {
+                let provinceCode = $(this).find(':selected').data('code');
+                let districtSelect = $('#district');
+                let wardSelect = $('#ward');
+                districtSelect.empty().append('<option value="">Chọn Quận/Huyện</option>');
+                wardSelect.empty().append('<option value="">Chọn Phường/Xã</option>');
+                if (provinceCode) {
+                    showSpinner('district-loading');
+                    $.getJSON(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`, function(data) {
+                        hideSpinner('district-loading');
+                        $.each(data.districts, function(index, district) {
+                            districtSelect.append(`<option value="${district.name}" data-code="${district.code}">${district.name}</option>`);
+                        });
+                        // Set current district
+                        if ('<?= htmlspecialchars($user['district'] ?? '') ?>' !== '') {
+                            districtSelect.val('<?= htmlspecialchars($user['district'] ?? '') ?>');
+                            districtSelect.trigger('change');
+                        }
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        hideSpinner('district-loading');
+                        iziToast.error({
+                            title: 'Lỗi',
+                            message: 'Không thể tải danh sách Quận/Huyện: ' + textStatus,
+                            position: 'topRight',
+                            timeout: 5000
+                        });
+                    });
+                }
+            });
+
+            // Load wards when district changes
+            $('#district').change(function() {
+                let districtCode = $(this).find(':selected').data('code');
+                let wardSelect = $('#ward');
+                wardSelect.empty().append('<option value="">Chọn Phường/Xã</option>');
+                if (districtCode) {
+                    showSpinner('ward-loading');
+                    $.getJSON(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`, function(data) {
+                        hideSpinner('ward-loading');
+                        if (data.wards && data.wards.length > 0) {
+                            $.each(data.wards, function(index, ward) {
+                                wardSelect.append(`<option value="${ward.name}">${ward.name}</option>`);
+                            });
+                            // Set current ward
+                            if ('<?= htmlspecialchars($user['ward'] ?? '') ?>' !== '') {
+                                wardSelect.val('<?= htmlspecialchars($user['ward'] ?? '') ?>');
+                            }
+                        } else {
+                            iziToast.warning({
+                                title: 'Cảnh báo',
+                                message: 'Không có dữ liệu Phường/Xã cho Quận/Huyện này.',
+                                position: 'topRight',
+                                timeout: 5000
+                            });
+                        }
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        hideSpinner('ward-loading');
+                        iziToast.error({
+                            title: 'Lỗi',
+                            message: 'Không thể tải danh sách Phường/Xã: ' + textStatus,
+                            position: 'topRight',
+                            timeout: 5000
+                        });
+                    });
+                }
+            });
+
             // iZitoast notification
             <?php if (isset($_SESSION['toast_message']) && isset($_SESSION['toast_type'])): ?>
                 iziToast.<?php echo $_SESSION['toast_type']; ?>({

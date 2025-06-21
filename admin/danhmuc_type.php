@@ -290,6 +290,8 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                     </div>
                 </div>
             </div>
+            <?php include 'include/footer.php'; ?>
+        <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th6 19, 2025 lúc 07:13 AM
+-- Thời gian đã tạo: Th6 21, 2025 lúc 05:39 AM
 -- Phiên bản máy phục vụ: 8.4.3
 -- Phiên bản PHP: 8.3.16
 
@@ -56,9 +56,16 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `title_vi`, `parent_id`, `module_id`, `display_position`, `is_active`, `h1_content`, `description_vi`, `content_vi`, `slug_vi`, `link_vi`, `link_target`, `seo_title_vi`, `seo_description_vi`, `seo_keywords_vi`, `avatar`, `timeline_image`, `background_image`, `gallery_images`, `position`, `created_at`) VALUES
-(1, 'Trang chủ', 0, 2, 'menu_main', 1, 'Trang chủ', '<p>&lt;style&gt; .danhmucconhome-item .image { border-style: solid; width: 100%; overflow: inherit; }</p>\r\n', '<p>&lt;style&gt; .danhmucconhome-item .image { border-style: solid; width: 100%; overflow: inherit; } .danhmucconhome-item .image img { width: 100%; height: 100%; border-radius: unset; opacity: .8; margin: unset; } &lt;/style&gt;</p>\r\n', 'trang-ch', '', '_self', 'Trang chủ', '// Chuyển hướng bằng JS nếu header thất bại\r\n    echo \'<script>window.location.href=\"?page=quantri\";</script>\';\r\n    exit;', 'Trang chủ', '/kai/admin/uploads/1750233866_avatar_info1.jpg', NULL, NULL, NULL, 0, '2025-06-18 15:03:51'),
-(2, 'Giới thiệu', 0, 3, 'menu_main', 1, '', '<p>+ Nhiệm vụ của Web Số sẽ c&agrave;i đặt v&agrave; tối ưu quảng c&aacute;o Google cho qu&yacute; kh&aacute;ch trong qu&aacute; tr&igrave;nh hoạt động của quảng c&aacute;o.</p>\r\n', '<p>+ Thay đổi mục ti&ecirc;u quảng c&aacute;o v&agrave; từ kh&oacute;a cho ph&ugrave; hợp với dịch vụ của qu&yacute; kh&aacute;ch. Chi ph&iacute; web Số sẽ nhận 15% dựa v&agrave;o số tiền kh&aacute;ch h&agrave;ng nạp v&agrave;o t&agrave;i khoản quảng c&aacute;o. VD: Qu&yacute; kh&aacute;ch nạp 5tr v&agrave;o tk quảng c&aacute;o, th&igrave; cần chuyển khoản 5.750.000 v&agrave; Web Số sẽ nhận 750.000 ph&iacute; quản l&yacute; quảng c&aacute;o v&agrave; chi ph&iacute; nạp tiền v&agrave;o Google. % Chi ph&iacute; c&oacute; thể thay đổi t&ugrave;y v&agrave;o kh&aacute;ch h&agrave;ng chạy ng&acirc;n s&aacute;ch nhiều hay &iacute;t.</p>\r\n', 'gioi-thieu', '', '_self', 'Giới thiệu', '+ Nhiệm vụ của Web Số sẽ cài đặt và tối ưu quảng cáo Google cho quý khách trong quá trình hoạt động của quảng cáo.', 'Giới thiệu', '/kai/admin/uploads/1750254428_avatar_1915ff9b-380b-4117-b3f9-a58ce21dc6ad.png', NULL, NULL, NULL, 1, '2025-06-18 15:32:00'),
-(3, 'Sản phẩm', 0, 4, 'menu_main,trang_chu', 1, '', '', '', 'san-pham', '', '_self', 'Sản phẩm', 'Trái cây tươi ngon, nhập mỗi ngày, đa dạng từ táo, nho, cam đến sầu riêng. Cam kết chất lượng, an toàn vệ sinh, giao hàng nhanh tại nhà.', '', NULL, NULL, NULL, NULL, 2, '2025-06-18 15:33:54');
+(1, 'Trang chủ', 0, 2, '', 1, 'Trang chủ', '<p>&lt;style&gt; .danhmucconhome-item .image { border-style: solid; width: 100%; overflow: inherit; }</p>\r\n', '<p>&lt;style&gt; .danhmucconhome-item .image { border-style: solid; width: 100%; overflow: inherit; } .danhmucconhome-item .image img { width: 100%; height: 100%; border-radius: unset; opacity: .8; margin: unset; } &lt;/style&gt;</p>\r\n', 'trang-ch', '', '_self', 'Trang chủ', '// Chuyển hướng bằng JS nếu header thất bại\r\n    echo \'<script>window.location.href=\"?page=quantri\";</script>\';\r\n    exit;', 'Trang chủ', '/kai/admin/uploads/1750233866_avatar_info1.jpg', NULL, NULL, NULL, 0, '2025-06-18 15:03:51'),
+(2, 'Giới thiệu', 0, 3, '', 1, '', '<p>+ Nhiệm vụ của Web Số sẽ c&agrave;i đặt v&agrave; tối ưu quảng c&aacute;o Google cho qu&yacute; kh&aacute;ch trong qu&aacute; tr&igrave;nh hoạt động của quảng c&aacute;o.</p>\r\n', '<p>+ Thay đổi mục ti&ecirc;u quảng c&aacute;o v&agrave; từ kh&oacute;a cho ph&ugrave; hợp với dịch vụ của qu&yacute; kh&aacute;ch. Chi ph&iacute; web Số sẽ nhận 15% dựa v&agrave;o số tiền kh&aacute;ch h&agrave;ng nạp v&agrave;o t&agrave;i khoản quảng c&aacute;o. VD: Qu&yacute; kh&aacute;ch nạp 5tr v&agrave;o tk quảng c&aacute;o, th&igrave; cần chuyển khoản 5.750.000 v&agrave; Web Số sẽ nhận 750.000 ph&iacute; quản l&yacute; quảng c&aacute;o v&agrave; chi ph&iacute; nạp tiền v&agrave;o Google. % Chi ph&iacute; c&oacute; thể thay đổi t&ugrave;y v&agrave;o kh&aacute;ch h&agrave;ng chạy ng&acirc;n s&aacute;ch nhiều hay &iacute;t.</p>\r\n', 'gioi-thieu', '', '_self', 'Giới thiệu', '+ Nhiệm vụ của Web Số sẽ cài đặt và tối ưu quảng cáo Google cho quý khách trong quá trình hoạt động của quảng cáo.', 'Giới thiệu', '/kai/admin/uploads/1750254428_avatar_1915ff9b-380b-4117-b3f9-a58ce21dc6ad.png', NULL, NULL, NULL, 1, '2025-06-18 15:32:00'),
+(3, 'Sản phẩm', 0, 4, '', 1, '', '', '', 'san-pham', '', '_self', 'Sản phẩm', 'Trái cây tươi ngon, nhập mỗi ngày, đa dạng từ táo, nho, cam đến sầu riêng. Cam kết chất lượng, an toàn vệ sinh, giao hàng nhanh tại nhà.', '', NULL, NULL, NULL, NULL, 2, '2025-06-18 15:33:54'),
+(6, 'Dịch vụ', 0, 5, '', 1, 'Dịch vụ', '<p>Iure et consectetur .</p>\r\n', '<p>Qui qui totam sunt f.</p>\r\n', 'dịch-vụ', '', '_self', 'Sint ipsum maiores', 'Labore aut accusanti', 'Sed aliquid voluptat', NULL, NULL, NULL, NULL, 3, '2025-06-21 08:28:21'),
+(7, 'Nội dung', 0, 6, '', 1, 'Nội dung', '<p>Incidunt, similique .</p>\r\n', '<p>Ut eu nihil non vita.</p>\r\n', 'nội-dung', '', '_self', 'Quos id quo necessit', 'Odit non et eum in a', 'Esse fugiat obcaec', '/kai/admin/uploads/1750470669_avatar_hinh-9.jpg', NULL, NULL, NULL, 5, '2025-06-21 08:51:09'),
+(8, 'Dự án', 0, 7, '', 1, 'Dự án', '<p>Culpa ut elit, nostr.</p>\r\n', '<p>Deserunt ut fuga. Vo.</p>\r\n', 'dự-án', '', '_self', 'Aspernatur officia q', 'Soluta qui exercitat', 'Eum voluptate nisi e', '/kai/admin/uploads/1750471003_avatar_-file9464-568.jpg', NULL, NULL, NULL, 5, '2025-06-21 08:56:43'),
+(9, 'Đối tác', 0, 14, '', 1, 'Đối tác', '<p>Velit doloremque imp.</p>\r\n', '<p>Dolor dolor animi, v.</p>\r\n', 'đối-tác', '', '_self', 'In anim quia volupta', 'Sed magni voluptatib', 'At enim neque quis n', '/kai/admin/uploads/1750473227_avatar_-file1303-415.jpg', NULL, NULL, NULL, 7, '2025-06-21 09:33:47'),
+(10, 'Ý kiến khách hàng', 0, 18, '', 1, 'Ý kiến khách hàng', '<p>Sunt sint consequatu.</p>\r\n', '<p>Magni adipisci molli.</p>\r\n', 'ý-kiến-khách-hàng', '', '_self', 'Ý kiến khách hàng', 'Lorem est tenetur si', 'Unde similique exerc', '/kai/admin/uploads/1750477562_avatar_khach-hang-1.jpg', NULL, NULL, NULL, 9, '2025-06-21 10:46:02'),
+(11, 'Aspernatur esse vel', 10, 18, '', 1, 'Consequat Aut et mo', '<p>Sint non ut mollit d.</p>\r\n', '<p>Et quibusdam sunt de.</p>\r\n', 'Ea ea ut aute beatae', 'Quas temporibus debi', '_blank', 'Vero molestiae iste', 'Est voluptas est fa', 'Ipsam ab dolore sint', NULL, NULL, NULL, NULL, 72, '2025-06-21 10:54:18'),
+(12, 'Video', 0, 9, '', 1, 'Video', '<p>Magnam voluptates au.</p>\r\n', '<p>Dicta voluptatem ven.</p>\r\n', 'video', '', '_self', 'Quas corrupti illo', 'A odio optio eius i', 'Sint inventore labor', NULL, NULL, NULL, NULL, 10, '2025-06-21 10:59:57');
 
 -- --------------------------------------------------------
 
@@ -83,10 +90,14 @@ CREATE TABLE `column_settings` (
 --
 
 INSERT INTO `column_settings` (`id`, `content_type`, `items_per_row_tiny`, `items_per_row_sm`, `items_per_row_md`, `items_per_row_lg`, `items_per_row_xl`, `created_at`, `updated_at`) VALUES
-(1, 'products', 2, 2, 2, 3, 3, '2025-06-19 01:16:52', '2025-06-19 02:29:21'),
-(2, 'services', 2, 2, 2, 3, 6, '2025-06-19 01:16:52', '2025-06-19 01:16:52'),
-(3, 'blog', 2, 2, 2, 3, 6, '2025-06-19 01:16:52', '2025-06-19 01:16:52'),
-(4, 'projects', 2, 2, 2, 3, 6, '2025-06-19 01:16:52', '2025-06-19 01:16:52');
+(1, 'products', 1, 2, 2, 3, 3, '2025-06-19 01:16:52', '2025-06-21 04:13:23'),
+(2, 'services', 3, 2, 2, 3, 6, '2025-06-19 01:16:52', '2025-06-21 04:12:52'),
+(3, 'blog', 2, 3, 2, 3, 6, '2025-06-19 01:16:52', '2025-06-21 03:33:40'),
+(4, 'projects', 2, 2, 2, 3, 6, '2025-06-19 01:16:52', '2025-06-19 01:16:52'),
+(19, 'partners', 2, 2, 2, 3, 6, '2025-06-21 03:25:03', '2025-06-21 03:25:03'),
+(20, 'gallery', 2, 2, 2, 3, 6, '2025-06-21 03:28:48', '2025-06-21 03:28:48'),
+(23, 'video', 1, 2, 3, 4, 4, '2025-06-21 04:12:38', '2025-06-21 04:12:38'),
+(24, 'customer_feedback', 2, 2, 3, 4, 4, '2025-06-21 04:12:38', '2025-06-21 04:13:03');
 
 -- --------------------------------------------------------
 
@@ -107,6 +118,92 @@ CREATE TABLE `contact_info` (
 
 INSERT INTO `contact_info` (`id`, `image`, `link`, `is_visible`) VALUES
 (6, '/kai/admin/uploads/1750167809_facebook.png', 'https://www.facebook.com/HelloIamNgocMinh', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `content`
+--
+
+CREATE TABLE `content` (
+  `id` int NOT NULL,
+  `title_vi` varchar(255) NOT NULL,
+  `parent_id` int DEFAULT '0',
+  `module_id` int DEFAULT '7',
+  `display_position` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  `h1_content` varchar(255) DEFAULT NULL,
+  `description_vi` text,
+  `content_vi` text,
+  `slug_vi` varchar(255) DEFAULT NULL,
+  `link_vi` varchar(255) DEFAULT NULL,
+  `link_target` varchar(50) DEFAULT '_self',
+  `seo_title_vi` varchar(255) DEFAULT NULL,
+  `seo_description_vi` text,
+  `seo_keywords_vi` text,
+  `gallery_images` text,
+  `position` int DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `content`
+--
+
+INSERT INTO `content` (`id`, `title_vi`, `parent_id`, `module_id`, `display_position`, `is_active`, `h1_content`, `description_vi`, `content_vi`, `slug_vi`, `link_vi`, `link_target`, `seo_title_vi`, `seo_description_vi`, `seo_keywords_vi`, `gallery_images`, `position`, `created_at`, `updated_at`) VALUES
+(1, 'Officiis aliquip dol', 0, 6, '', 1, 'Nihil omnis voluptat', '<p>Inventore eum volupt.</p>\r\n', '<p>A eveniet, in anim l.</p>\r\n', 'officiis-aliquip-dol', '', '_self', 'Molestiae et deserun', 'Eum aut odit labore', 'Lorem accusamus ad e', '/kai/admin/uploads/1750470878_gallery_0_nghi-phan-0.jpg', 1, '2025-06-21 08:54:38', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `customer_feedback`
+--
+
+CREATE TABLE `customer_feedback` (
+  `id` int NOT NULL COMMENT 'Mã định danh duy nhất cho ý kiến khách hàng',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên khách hàng',
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Đường dẫn hình ảnh',
+  `module_id` int NOT NULL COMMENT 'ID module liên kết (tham chiếu id trong categories)',
+  `description` text COLLATE utf8mb4_unicode_ci COMMENT 'Mô tả ý kiến khách hàng',
+  `content` text COLLATE utf8mb4_unicode_ci COMMENT 'Nội dung ý kiến khách hàng',
+  `is_active` tinyint(1) DEFAULT '1' COMMENT 'Trạng thái hiển thị (1: hiện, 0: ẩn)',
+  `created_at` datetime NOT NULL COMMENT 'Thời gian tạo',
+  `updated_at` datetime DEFAULT NULL COMMENT 'Thời gian cập nhật cuối'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Bảng lưu trữ ý kiến khách hàng';
+
+--
+-- Đang đổ dữ liệu cho bảng `customer_feedback`
+--
+
+INSERT INTO `customer_feedback` (`id`, `name`, `image`, `module_id`, `description`, `content`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Nguyễn Văn A', 'uploads/feedback/1750477330_hinh-9.jpg', 10, 'Sản phẩm rất tốt, dịch vụ tuyệt vời!', 'Sản phẩm rất tốt, dịch vụ tuyệt vời!', 1, '2025-06-21 10:36:31', '2025-06-21 10:42:10'),
+(2, 'Trần Thị B', 'uploads/feedback/1750477362_khach-hang-4.jpg', 10, 'Tôi rất hài lòng với chất lượng.', 'Tôi rất hài lòng với chất lượng.', 1, '2025-06-21 10:36:31', '2025-06-21 10:42:42');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `gallery`
+--
+
+CREATE TABLE `gallery` (
+  `id` int NOT NULL,
+  `title_vi` varchar(255) NOT NULL,
+  `module_id` int DEFAULT '9',
+  `is_active` tinyint(1) DEFAULT '1',
+  `gallery_images` text,
+  `position` int DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `gallery`
+--
+
+INSERT INTO `gallery` (`id`, `title_vi`, `module_id`, `is_active`, `gallery_images`, `position`, `created_at`, `updated_at`) VALUES
+(1, 'hình ảnh', 9, 1, '/kai/admin/uploads/1750471486_gallery_0_featur-3.jpg,/kai/admin/uploads/1750471486_gallery_1_featur-1.jpg,/kai/admin/uploads/1750471486_gallery_2_featur-2.jpg,/kai/admin/uploads/1750471486_gallery_3_fruite-item-1.jpg', 1, '2025-06-21 09:04:46', NULL),
+(2, 'ds', 9, 1, '/kai/admin/uploads/1750471787_gallery_0_phuong-quyen-tran-0.jpg,/kai/admin/uploads/1750471787_gallery_1_nghi-phan-0.jpg,/kai/admin/uploads/1750471787_gallery_2_bao-bao-0.jpg,/kai/admin/uploads/1750471787_gallery_3_bao-an-nguyen-ngoc-0.jpg,/kai/admin/uploads/1750471787_gallery_4_-file9355-504.jpg,/kai/admin/uploads/1750471787_gallery_5_-file1303-415.jpg,/kai/admin/uploads/1750471787_gallery_6_-file1646-931.jpg,/kai/admin/uploads/1750471787_gallery_7_-file2211-561.jpg', 0, '2025-06-21 09:09:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -140,7 +237,7 @@ CREATE TABLE `info` (
 --
 
 INSERT INTO `info` (`id`, `title_vi`, `parent_id`, `module_id`, `display_position`, `is_active`, `h1_content`, `description_vi`, `content_vi`, `slug_vi`, `link_vi`, `link_target`, `seo_title_vi`, `seo_description_vi`, `seo_keywords_vi`, `gallery_images`, `position`, `created_at`) VALUES
-(2, 'Về chúng tôi', 2, 3, 'trang_chu', 1, 'Về chúng tôi', '<h3>m&ocirc; tả</h3>\r\n', '<h3>✅ Mẹo th&ecirc;m:</h3>\r\n\r\n<p>Nếu bạn muốn hiện t&ecirc;n nằm <strong>tr&ecirc;n g&oacute;c ảnh như watermark</strong>, c&oacute; thể d&ugrave;ng CSS để chồng chữ l&ecirc;n ảnh &ndash; m&igrave;nh cũng c&oacute; thể gi&uacute;p nếu bạn muốn theo kiểu đ&oacute;.</p>\r\n\r\n<p>Bạn c&oacute; muốn chữ nằm <strong>tr&ecirc;n ảnh, g&oacute;c tr&ecirc;n tr&aacute;i</strong> kh&ocirc;ng? Hay chỉ cần kiểu văn bản ph&iacute;a tr&ecirc;n như tr&ecirc;n l&agrave; đủ?</p>\r\n', 've-chung', '', '_self', 'Về chúng tôi', 'ALTER TABLE info ADD COLUMN parent_id INT DEFAULT 0 AFTER title_vi,\r\nADD FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL;', 'Về chúng tôi', NULL, 0, '2025-06-18 14:31:11');
+(2, 'Về chúng tôi', 2, 3, '', 1, 'Về chúng tôi', '<h3>m&ocirc; tả</h3>\r\n', '<h3>✅ Mẹo th&ecirc;m:</h3>\r\n\r\n<p>Nếu bạn muốn hiện t&ecirc;n nằm <strong>tr&ecirc;n g&oacute;c ảnh như watermark</strong>, c&oacute; thể d&ugrave;ng CSS để chồng chữ l&ecirc;n ảnh &ndash; m&igrave;nh cũng c&oacute; thể gi&uacute;p nếu bạn muốn theo kiểu đ&oacute;.</p>\r\n\r\n<p>Bạn c&oacute; muốn chữ nằm <strong>tr&ecirc;n ảnh, g&oacute;c tr&ecirc;n tr&aacute;i</strong> kh&ocirc;ng? Hay chỉ cần kiểu văn bản ph&iacute;a tr&ecirc;n như tr&ecirc;n l&agrave; đủ?</p>\r\n', 've-chung', '', '_self', 'Về chúng tôi', 'ALTER TABLE info ADD COLUMN parent_id INT DEFAULT 0 AFTER title_vi,\r\nADD FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL;', 'Về chúng tôi', NULL, 0, '2025-06-18 14:31:11');
 
 -- --------------------------------------------------------
 
@@ -168,6 +265,32 @@ CREATE TABLE `logos` (
 
 INSERT INTO `logos` (`id`, `title_vi`, `desktop_image`, `mobile_image`, `link_vi`, `link_target`, `width`, `height`, `is_active`, `position`, `created_at`) VALUES
 (1, 'logo', '/kai/admin/uploads/1750253207_desktop_fahicon.png', '/kai/admin/uploads/1750253207_mobile_fahicon.png', 'http://localhost/kai/', '_self', NULL, 100, 1, 0, '2025-06-18 13:26:47');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `maps`
+--
+
+CREATE TABLE `maps` (
+  `id` int NOT NULL COMMENT 'Mã định danh duy nhất cho bản đồ',
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên bản đồ',
+  `address` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Địa chỉ chi tiết',
+  `province_code` int NOT NULL COMMENT 'Mã tỉnh/thành phố (từ API)',
+  `zoom` int DEFAULT '15' COMMENT 'Mức zoom bản đồ',
+  `coordinates` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tọa độ (lat,lng)',
+  `embed_code` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Mã nhúng iframe Google Maps',
+  `is_active` tinyint(1) DEFAULT '1' COMMENT 'Trạng thái hiển thị (1: hiện, 0: ẩn)',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Thời gian tạo',
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Thời gian cập nhật'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Bảng lưu trữ thông tin bản đồ';
+
+--
+-- Đang đổ dữ liệu cho bảng `maps`
+--
+
+INSERT INTO `maps` (`id`, `title`, `address`, `province_code`, `zoom`, `coordinates`, `embed_code`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Thắng Rai', 'Thôn 3, Krông Bông, Đắk Lắk 64407', 66, 15, '12.5272579,108.3053496', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3894.832426986425!2d108.305349584132!3d12.527257892892967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317193b603af7f3b%3A0x71c85315931a80b0!2zVGjhuq9uZyBSYWk!5e0!3m2!1svi!2s!4v1750479553562!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', 1, '2025-06-21 11:21:06', '2025-06-21 12:07:35');
 
 -- --------------------------------------------------------
 
@@ -218,16 +341,16 @@ INSERT INTO `menu_items` (`id`, `name`, `icon`, `url`, `badge`, `parent_id`, `po
 (23, 'Đăng ký nhận mail', '', 'dangkynhanmail.php', '', 21, 0, 0, '2025-06-18 06:10:00', 1, NULL),
 (24, 'Bản đồ', '', 'bando.php', '', 21, 0, 0, '2025-06-18 06:10:11', 1, NULL),
 (25, 'Menu', 'fas fa-align-justify', '', '', NULL, 5, 0, '2025-06-18 06:11:20', 1, NULL),
-(26, 'Danh sách menu', '', 'categories.php', '', 25, 0, 0, '2025-06-18 06:11:42', 1, NULL),
+(26, 'Danh sách menu', '', 'categories.php', '', 25, 30, 0, '2025-06-18 06:11:42', 1, NULL),
 (27, 'Giới thiệu', 'fas fa-info-circle', '', '', NULL, 7, 0, '2025-06-18 06:14:56', 1, NULL),
 (28, 'Danh sách bài viết giới thiệu', '', 'info.php', '', 27, 0, 0, '2025-06-18 06:15:36', 1, NULL),
-(29, 'Sản Phẩm', 'fas fa-th-large', '', '', NULL, 8, 0, '2025-06-18 06:16:57', 1, NULL),
-(30, 'Danh sách sản phẩm', '', 'product.php', '', 29, 0, 0, '2025-06-18 06:18:00', 1, NULL),
-(31, 'Bình luận', '', 'binhluan.php', '', 29, 0, 0, '2025-06-18 06:18:19', 1, NULL),
-(32, 'Cấu hình khuyến mãi', '', 'khuyenmai.php', '', 29, 0, 0, '2025-06-18 06:18:37', 1, NULL),
-(33, 'Dịch vụ', 'fas fa-file', '', '', NULL, 8, 0, '2025-06-18 06:19:17', 1, NULL),
-(34, 'Danh sách bài viết Dịch vụ', '', 'sevice.php', '', 33, 0, 0, '2025-06-18 06:19:40', 1, NULL),
-(35, 'Kích thước hình Dịch vụ', '', 'sizeimgservice.php', '', 33, 0, 0, '2025-06-18 06:20:07', 1, NULL),
+(29, 'Sản Phẩm', 'fas fa-th-large', '', '', NULL, 7, 0, '2025-06-18 06:16:57', 1, NULL),
+(30, 'Danh sách sản phẩm', '', 'product.php', '', 29, 30, 0, '2025-06-18 06:18:00', 1, NULL),
+(31, 'Bình luận', '', 'binhluan.php', '', 29, 32, 0, '2025-06-18 06:18:19', 1, NULL),
+(32, 'Cấu hình khuyến mãi', '', 'khuyenmai.php', '', 29, 31, 0, '2025-06-18 06:18:37', 1, NULL),
+(33, 'Dịch vụ', 'fas fa-file', '', '', NULL, 9, 0, '2025-06-18 06:19:17', 1, NULL),
+(34, 'Danh sách bài viết Dịch vụ', '', 'service.php', '', 33, 0, 0, '2025-06-18 06:19:40', 1, NULL),
+(35, 'Kích thước hình Dịch vụ', '', 'sizeimgservice.php', '', 33, 0, 0, '2025-06-18 06:20:07', 0, NULL),
 (36, 'Quản lý Hình - Video', 'fas fa-images', '', '', NULL, 9, 0, '2025-06-18 06:20:38', 1, NULL),
 (37, 'Hình slideshow', '', 'slideshow.php', '', 36, 0, 0, '2025-06-18 06:21:09', 1, NULL),
 (38, 'Banner - Logo', '', 'logo.php', '', 36, 0, 0, '2025-06-18 06:21:29', 1, NULL),
@@ -238,9 +361,14 @@ INSERT INTO `menu_items` (`id`, `name`, `icon`, `url`, `badge`, `parent_id`, `po
 (43, 'Đối tác', '', 'doitac.php', '', 41, 0, 0, '2025-06-18 06:24:20', 1, NULL),
 (44, 'Ý kiến khách hàng', '', 'ykienkhachhang.php', '', 41, 0, 0, '2025-06-18 06:24:44', 1, NULL),
 (45, 'Lịch sử đăng nhập', '', 'loginhistory.php', '', 14, 22, 0, '2025-06-18 06:26:36', 1, NULL),
-(46, 'Kích thước hình bài viết giới thiệu', '', 'sizeimggioithieu.php', '', 27, 30, 0, '2025-06-18 06:32:14', 1, NULL),
+(46, 'Kích thước hình bài viết giới thiệu', '', 'sizeimggioithieu.php', '', 27, 30, 0, '2025-06-18 06:32:14', 0, NULL),
 (47, 'Ngôn ngữ', '', 'ngonngu.php', '', 11, 15, 0, '2025-06-18 06:33:32', 1, NULL),
-(48, 'Module', '', 'danhmuc_type.php', '', 25, 0, 0, '2025-06-18 07:00:13', 1, NULL);
+(48, 'Module', '', 'danhmuc_type.php', '', 25, 33, 0, '2025-06-18 07:00:13', 1, NULL),
+(49, 'Nội dung - Blog', 'fas fa-book', '', '', NULL, 8, 0, '2025-06-21 01:46:24', 1, NULL),
+(50, 'Danh sách Nội dung - Blog', '', 'content.php', '', 49, 0, 0, '2025-06-21 01:47:02', 1, NULL),
+(51, 'Dự án', 'fas fa-clipboard-list', '', '', NULL, 9, 0, '2025-06-21 01:47:41', 1, NULL),
+(52, 'Danh sách dự án', '', 'project.php', '', 51, 0, 0, '2025-06-21 01:48:02', 1, NULL),
+(53, 'Video', 'fas fa-video-slash', 'video.php', '', NULL, 13, 0, '2025-06-21 02:15:53', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -350,6 +478,38 @@ INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `title`, `price`, `
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `partner`
+--
+
+CREATE TABLE `partner` (
+  `id` int NOT NULL COMMENT 'Mã định danh duy nhất cho đối tác',
+  `title_vi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên đối tác bằng tiếng Việt',
+  `parent_id` int DEFAULT '0' COMMENT 'Mã danh mục cha (0 nếu không có danh mục cha)',
+  `module_id` int NOT NULL DEFAULT '8' COMMENT 'Mã module (8 cho module Đối tác)',
+  `is_active` tinyint(1) DEFAULT '1' COMMENT 'Trạng thái hiển thị (1: Hiện, 0: Ẩn)',
+  `h1_content` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Nội dung thẻ H1',
+  `content_vi` text COLLATE utf8mb4_unicode_ci COMMENT 'Nội dung chi tiết bằng tiếng Việt',
+  `slug_vi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Đường dẫn thân thiện tiếng Việt',
+  `link_vi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Liên kết tiếng Việt',
+  `link_target` enum('_self','_blank') COLLATE utf8mb4_unicode_ci DEFAULT '_self' COMMENT 'Phương thức mở liên kết (_self: Trang hiện tại, _blank: Trang mới)',
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Đường dẫn tới hình ảnh của đối tác',
+  `width` int DEFAULT NULL COMMENT 'Độ rộng hình ảnh (pixel)',
+  `height` int DEFAULT NULL COMMENT 'Chiều cao hình ảnh (pixel)',
+  `position` int DEFAULT '0' COMMENT 'Thứ tự sắp xếp',
+  `created_at` datetime NOT NULL COMMENT 'Thời gian tạo',
+  `updated_at` datetime DEFAULT NULL COMMENT 'Thời gian cập nhật cuối'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Bảng lưu trữ thông tin đối tác';
+
+--
+-- Đang đổ dữ liệu cho bảng `partner`
+--
+
+INSERT INTO `partner` (`id`, `title_vi`, `parent_id`, `module_id`, `is_active`, `h1_content`, `content_vi`, `slug_vi`, `link_vi`, `link_target`, `image`, `width`, `height`, `position`, `created_at`, `updated_at`) VALUES
+(1, 'Ea aspernatur conseq', 0, 14, 1, 'Neque alias pariatur', '<p>Inventore esse, do r.</p>\r\n', 'ea-aspernatur-conseq', '', '_blank', '/kai/admin/uploads/1750475935_partner.png', 100, 88, 1, '2025-06-21 10:18:55', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `products`
 --
 
@@ -420,6 +580,41 @@ INSERT INTO `product_categories` (`product_id`, `category_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `project`
+--
+
+CREATE TABLE `project` (
+  `id` int NOT NULL,
+  `title_vi` varchar(255) NOT NULL,
+  `parent_id` int DEFAULT '0',
+  `module_id` int DEFAULT '8',
+  `display_position` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  `h1_content` varchar(255) DEFAULT NULL,
+  `description_vi` text,
+  `content_vi` text,
+  `slug_vi` varchar(255) DEFAULT NULL,
+  `link_vi` varchar(255) DEFAULT NULL,
+  `link_target` varchar(50) DEFAULT '_self',
+  `seo_title_vi` varchar(255) DEFAULT NULL,
+  `seo_description_vi` text,
+  `seo_keywords_vi` text,
+  `gallery_images` text,
+  `position` int DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `project`
+--
+
+INSERT INTO `project` (`id`, `title_vi`, `parent_id`, `module_id`, `display_position`, `is_active`, `h1_content`, `description_vi`, `content_vi`, `slug_vi`, `link_vi`, `link_target`, `seo_title_vi`, `seo_description_vi`, `seo_keywords_vi`, `gallery_images`, `position`, `created_at`, `updated_at`) VALUES
+(1, 'Harum quia in fugiat', 8, 7, '', 0, 'Nostrud ipsum aliqu', '<p>Duis ducimus, velit .</p>\r\n', '<p>Aperiam id inventore.</p>\r\n', 'harum-quia-in-fugiat', '', '_self', 'Culpa officiis vero', 'Ea consequatur porro', 'Excepturi ipsa reic', '/kai/admin/uploads/1750471239_gallery_0_nha-trang-1-1.jpg', 61, '2025-06-21 09:00:39', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `roles`
 --
 
@@ -437,6 +632,41 @@ INSERT INTO `roles` (`id`, `name`, `description`) VALUES
 (1, 'admin', 'Quản trị hệ thống'),
 (2, 'user', 'Người dùng thông thường'),
 (3, 'staff', 'Nhân viên quản lý nội dung');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `service`
+--
+
+CREATE TABLE `service` (
+  `id` int NOT NULL,
+  `title_vi` varchar(255) NOT NULL,
+  `parent_id` int DEFAULT '0',
+  `module_id` int DEFAULT '3',
+  `display_position` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  `h1_content` varchar(255) DEFAULT NULL,
+  `description_vi` text,
+  `content_vi` text,
+  `slug_vi` varchar(255) DEFAULT NULL,
+  `link_vi` varchar(255) DEFAULT NULL,
+  `link_target` varchar(50) DEFAULT '_self',
+  `seo_title_vi` varchar(255) DEFAULT NULL,
+  `seo_description_vi` text,
+  `seo_keywords_vi` text,
+  `gallery_images` text,
+  `position` int DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `service`
+--
+
+INSERT INTO `service` (`id`, `title_vi`, `parent_id`, `module_id`, `display_position`, `is_active`, `h1_content`, `description_vi`, `content_vi`, `slug_vi`, `link_vi`, `link_target`, `seo_title_vi`, `seo_description_vi`, `seo_keywords_vi`, `gallery_images`, `position`, `created_at`, `updated_at`) VALUES
+(1, 'Architecto anim eius', 6, 5, '', 1, 'Excepteur velit ut', '<p>Et earum exercitatio.</p>\r\n', '<p>Quia sit duis aut ci.</p>\r\n', 'architecto-anim-eius', '', '_self', 'Ullamco enim minus d', 'Tempore ipsam ullam', 'Optio molestiae tem', '/kai/admin/uploads/1750469870_gallery_0_f6c74a62-9ba7-4fe2-b4c2-5c073a044f40.png', 1, '2025-06-21 08:30:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -517,7 +747,14 @@ INSERT INTO `userlog` (`id`, `userId`, `username`, `userIp`, `login_time`, `stat
 (9, 1, 'admin', '::1', '2025-06-19 13:06:48', 'success'),
 (10, 1, 'admin', '::1', '2025-06-19 13:20:41', 'success'),
 (11, 2, 'loi', '::1', '2025-06-19 13:42:00', 'failed'),
-(12, 2, 'loi', '::1', '2025-06-19 13:42:03', 'failed');
+(12, 2, 'loi', '::1', '2025-06-19 13:42:03', 'failed'),
+(13, 1, 'admin', '::1', '2025-06-21 08:05:53', 'success'),
+(14, 1, 'admin', '::1', '2025-06-21 09:08:58', 'success'),
+(15, 1, 'admin', '::1', '2025-06-21 09:23:57', 'success'),
+(16, 1, 'admin', '::1', '2025-06-21 09:24:14', 'success'),
+(17, 1, 'admin', '::1', '2025-06-21 12:04:03', 'success'),
+(18, 2, 'loi', '::1', '2025-06-21 12:33:45', 'success'),
+(19, 1, 'admin', '::1', '2025-06-21 12:34:44', 'success');
 
 -- --------------------------------------------------------
 
@@ -537,16 +774,20 @@ CREATE TABLE `users` (
   `address` varchar(255) DEFAULT NULL,
   `avatar` varchar(255) DEFAULT NULL,
   `dob` date DEFAULT NULL,
-  `is_active` tinyint(1) DEFAULT '1'
+  `is_active` tinyint(1) DEFAULT '1',
+  `province` varchar(100) DEFAULT NULL,
+  `district` varchar(100) DEFAULT NULL,
+  `ward` varchar(100) DEFAULT NULL,
+  `address_detail` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `fullname`, `email`, `role_id`, `created_at`, `phone`, `address`, `avatar`, `dob`, `is_active`) VALUES
-(1, 'admin', 'admin', 'Thắng Rai', 'badaotulong123@gmail.com', 1, '2025-06-17 03:36:20', '0914476792', '59 Đường 30/4, Phường Tân Thành, Quận Tân Phú, Thành phố Hồ Chí Minh', '/kai/admin/uploads/1750219074_z4129947384514_d72a106cac6e6e6f85ffe9c60e3fa8cb.jpg', '2003-06-20', 1),
-(2, 'loi', 'loi', 'Bá Lợi', 'baloi@gmail.com', 3, '2025-06-18 01:38:43', '0914476792', 'thôn 3 số nhà 161', '/kai/admin/uploads/1750210723_yk1.jpg', '2025-06-18', 1);
+INSERT INTO `users` (`id`, `username`, `password`, `fullname`, `email`, `role_id`, `created_at`, `phone`, `address`, `avatar`, `dob`, `is_active`, `province`, `district`, `ward`, `address_detail`) VALUES
+(1, 'admin', 'admin', 'Thắng Rai', 'badaotulong123@gmail.com', 1, '2025-06-17 03:36:20', '0914476792', '161 Thôn 3, Xã Khuê Ngọc Điền, Huyện Krông Bông, Tỉnh Đắk Lắk', '/kai/admin/uploads/1750219074_z4129947384514_d72a106cac6e6e6f85ffe9c60e3fa8cb.jpg', '2003-06-20', 1, 'Tỉnh Đắk Lắk', 'Huyện Krông Bông', 'Xã Khuê Ngọc Điền', '161 Thôn 3'),
+(2, 'loi', 'loi', 'Bá Lợi', 'baloi@gmail.com', 3, '2025-06-18 01:38:43', '0914476792', 'thôn 3 số nhà 161', '/kai/admin/uploads/1750210723_yk1.jpg', '2025-06-18', 1, 'Tỉnh Lạng Sơn', 'Huyện Tràng Định', 'Xã Trung Thành', '21B Trần Khắc Trân,');
 
 -- --------------------------------------------------------
 
@@ -578,48 +819,85 @@ INSERT INTO `user_menu_permissions` (`id`, `user_id`, `menu_item_id`, `can_view`
 (895, 2, 20, 1, 1, 1, 0),
 (896, 2, 21, 1, 0, 0, 0),
 (897, 2, 13, 1, 0, 0, 0),
-(940, 1, 1, 1, 1, 1, 1),
-(941, 1, 4, 1, 1, 1, 1),
-(942, 1, 5, 1, 1, 1, 1),
-(943, 1, 9, 1, 1, 1, 1),
-(944, 1, 11, 1, 1, 1, 1),
-(945, 1, 12, 1, 1, 1, 1),
-(946, 1, 13, 1, 1, 1, 1),
-(947, 1, 14, 1, 1, 1, 1),
-(948, 1, 15, 1, 1, 1, 1),
-(949, 1, 16, 1, 1, 1, 1),
-(950, 1, 17, 1, 1, 1, 1),
-(951, 1, 18, 1, 1, 1, 1),
-(952, 1, 19, 1, 1, 1, 1),
-(953, 1, 20, 1, 1, 1, 1),
-(954, 1, 21, 1, 1, 1, 1),
-(955, 1, 22, 1, 1, 1, 1),
-(956, 1, 23, 1, 1, 1, 1),
-(957, 1, 24, 1, 1, 1, 1),
-(958, 1, 25, 1, 1, 1, 1),
-(959, 1, 26, 1, 1, 1, 1),
-(960, 1, 27, 1, 1, 1, 1),
-(961, 1, 28, 1, 1, 1, 1),
-(962, 1, 29, 1, 1, 1, 1),
-(963, 1, 30, 1, 1, 1, 1),
-(964, 1, 31, 1, 1, 1, 1),
-(965, 1, 32, 1, 1, 1, 1),
-(966, 1, 33, 1, 1, 1, 1),
-(967, 1, 34, 1, 1, 1, 1),
-(968, 1, 35, 1, 1, 1, 1),
-(969, 1, 36, 1, 1, 1, 1),
-(970, 1, 37, 1, 1, 1, 1),
-(971, 1, 38, 1, 1, 1, 1),
-(972, 1, 39, 1, 1, 1, 1),
-(973, 1, 40, 1, 1, 1, 1),
-(974, 1, 41, 1, 1, 1, 1),
-(975, 1, 42, 1, 1, 1, 1),
-(976, 1, 43, 1, 1, 1, 1),
-(977, 1, 44, 1, 1, 1, 1),
-(978, 1, 45, 1, 1, 1, 1),
-(979, 1, 46, 1, 1, 1, 1),
-(980, 1, 47, 1, 1, 1, 1),
-(981, 1, 48, 1, 1, 1, 1);
+(1026, 1, 1, 1, 1, 1, 1),
+(1027, 1, 4, 1, 1, 1, 1),
+(1028, 1, 5, 1, 1, 1, 1),
+(1029, 1, 9, 1, 1, 1, 1),
+(1030, 1, 11, 1, 1, 1, 1),
+(1031, 1, 12, 1, 1, 1, 1),
+(1032, 1, 13, 1, 1, 1, 1),
+(1033, 1, 14, 1, 1, 1, 1),
+(1034, 1, 15, 1, 1, 1, 1),
+(1035, 1, 16, 1, 1, 1, 1),
+(1036, 1, 17, 1, 1, 1, 1),
+(1037, 1, 18, 1, 1, 1, 1),
+(1038, 1, 19, 1, 1, 1, 1),
+(1039, 1, 20, 1, 1, 1, 1),
+(1040, 1, 21, 1, 1, 1, 1),
+(1041, 1, 22, 1, 1, 1, 1),
+(1042, 1, 23, 1, 1, 1, 1),
+(1043, 1, 24, 1, 1, 1, 1),
+(1044, 1, 25, 1, 1, 1, 1),
+(1045, 1, 26, 1, 1, 1, 1),
+(1046, 1, 27, 1, 1, 1, 1),
+(1047, 1, 28, 1, 1, 1, 1),
+(1048, 1, 29, 1, 1, 1, 1),
+(1049, 1, 30, 1, 1, 1, 1),
+(1050, 1, 31, 1, 1, 1, 1),
+(1051, 1, 32, 1, 1, 1, 1),
+(1052, 1, 33, 1, 1, 1, 1),
+(1053, 1, 34, 1, 1, 1, 1),
+(1054, 1, 36, 1, 1, 1, 1),
+(1055, 1, 37, 1, 1, 1, 1),
+(1056, 1, 38, 1, 1, 1, 1),
+(1057, 1, 39, 1, 1, 1, 1),
+(1058, 1, 40, 1, 1, 1, 1),
+(1059, 1, 41, 1, 1, 1, 1),
+(1060, 1, 42, 1, 1, 1, 1),
+(1061, 1, 43, 1, 1, 1, 1),
+(1062, 1, 44, 1, 1, 1, 1),
+(1063, 1, 45, 1, 1, 1, 1),
+(1064, 1, 47, 1, 1, 1, 1),
+(1065, 1, 48, 1, 1, 1, 1),
+(1066, 1, 49, 1, 1, 1, 1),
+(1067, 1, 50, 1, 1, 1, 1),
+(1068, 1, 51, 1, 1, 1, 1),
+(1069, 1, 52, 1, 1, 1, 1),
+(1070, 1, 53, 1, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `video`
+--
+
+CREATE TABLE `video` (
+  `id` int NOT NULL COMMENT 'Mã định danh duy nhất cho video',
+  `title_vi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tiêu đề tiếng Việt',
+  `parent_id` int DEFAULT '0' COMMENT 'ID danh mục cha',
+  `module_id` int NOT NULL DEFAULT '9' COMMENT 'ID module (9 cho video)',
+  `display_position` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Vị trí hiển thị, phân tách bằng dấu phẩy',
+  `is_active` tinyint(1) DEFAULT '1' COMMENT 'Trạng thái hiển thị (1: hiện, 0: ẩn)',
+  `h1_content` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Nội dung thẻ H1',
+  `description_vi` text COLLATE utf8mb4_unicode_ci COMMENT 'Mô tả tiếng Việt',
+  `content_vi` text COLLATE utf8mb4_unicode_ci COMMENT 'Nội dung tiếng Việt',
+  `slug_vi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Đường dẫn tiếng Việt',
+  `link_vi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Link YouTube',
+  `link_target` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '_self' COMMENT 'Phương thức mở liên kết (_self, _blank)',
+  `seo_title_vi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Tiêu đề SEO tiếng Việt',
+  `seo_description_vi` text COLLATE utf8mb4_unicode_ci COMMENT 'Mô tả SEO tiếng Việt',
+  `seo_keywords_vi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Từ khóa SEO tiếng Việt',
+  `position` int DEFAULT '0' COMMENT 'Thứ tự sắp xếp',
+  `created_at` datetime NOT NULL COMMENT 'Thời gian tạo',
+  `updated_at` datetime DEFAULT NULL COMMENT 'Thời gian cập nhật'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Bảng lưu trữ video';
+
+--
+-- Đang đổ dữ liệu cho bảng `video`
+--
+
+INSERT INTO `video` (`id`, `title_vi`, `parent_id`, `module_id`, `display_position`, `is_active`, `h1_content`, `description_vi`, `content_vi`, `slug_vi`, `link_vi`, `link_target`, `seo_title_vi`, `seo_description_vi`, `seo_keywords_vi`, `position`, `created_at`, `updated_at`) VALUES
+(1, 'Quam reprehenderit n', 12, 9, '', 1, 'Ipsum tempora sint', '<p>Deserunt quia ex ex .</p>\r\n', '<p>Laboriosam, eu proid.</p>\r\n', 'Ipsum delectus tem', 'https://www.youtube.com/watch?v=1ui7lF_hz6U', '_blank', 'Aliquam in voluptate', 'Aut omnis cum corpor', 'Aspernatur et repell', 1, '2025-06-21 11:01:38', '2025-06-21 11:01:38');
 
 -- --------------------------------------------------------
 
@@ -672,6 +950,24 @@ ALTER TABLE `contact_info`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Chỉ mục cho bảng `content`
+--
+ALTER TABLE `content`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `customer_feedback`
+--
+ALTER TABLE `customer_feedback`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `gallery`
+--
+ALTER TABLE `gallery`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Chỉ mục cho bảng `info`
 --
 ALTER TABLE `info`
@@ -683,6 +979,12 @@ ALTER TABLE `info`
 -- Chỉ mục cho bảng `logos`
 --
 ALTER TABLE `logos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `maps`
+--
+ALTER TABLE `maps`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -712,6 +1014,12 @@ ALTER TABLE `order_details`
   ADD KEY `order_id` (`order_id`);
 
 --
+-- Chỉ mục cho bảng `partner`
+--
+ALTER TABLE `partner`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Chỉ mục cho bảng `products`
 --
 ALTER TABLE `products`
@@ -726,11 +1034,23 @@ ALTER TABLE `product_categories`
   ADD KEY `category_id` (`category_id`);
 
 --
+-- Chỉ mục cho bảng `project`
+--
+ALTER TABLE `project`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Chỉ mục cho bảng `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Chỉ mục cho bảng `service`
+--
+ALTER TABLE `service`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Chỉ mục cho bảng `settings`
@@ -770,6 +1090,12 @@ ALTER TABLE `user_menu_permissions`
   ADD KEY `menu_item_id` (`menu_item_id`);
 
 --
+-- Chỉ mục cho bảng `video`
+--
+ALTER TABLE `video`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Chỉ mục cho bảng `visits`
 --
 ALTER TABLE `visits`
@@ -783,19 +1109,37 @@ ALTER TABLE `visits`
 -- AUTO_INCREMENT cho bảng `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT cho bảng `column_settings`
 --
 ALTER TABLE `column_settings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT cho bảng `contact_info`
 --
 ALTER TABLE `contact_info`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT cho bảng `content`
+--
+ALTER TABLE `content`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `customer_feedback`
+--
+ALTER TABLE `customer_feedback`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã định danh duy nhất cho ý kiến khách hàng', AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `gallery`
+--
+ALTER TABLE `gallery`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `info`
@@ -810,10 +1154,16 @@ ALTER TABLE `logos`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT cho bảng `maps`
+--
+ALTER TABLE `maps`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã định danh duy nhất cho bản đồ', AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT cho bảng `menu_items`
 --
 ALTER TABLE `menu_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT cho bảng `modules`
@@ -834,16 +1184,34 @@ ALTER TABLE `order_details`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT cho bảng `partner`
+--
+ALTER TABLE `partner`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã định danh duy nhất cho đối tác', AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT cho bảng `project`
+--
+ALTER TABLE `project`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT cho bảng `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `service`
+--
+ALTER TABLE `service`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `settings`
@@ -861,7 +1229,7 @@ ALTER TABLE `slideshow`
 -- AUTO_INCREMENT cho bảng `userlog`
 --
 ALTER TABLE `userlog`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
@@ -873,7 +1241,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `user_menu_permissions`
 --
 ALTER TABLE `user_menu_permissions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=982;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1071;
+
+--
+-- AUTO_INCREMENT cho bảng `video`
+--
+ALTER TABLE `video`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Mã định danh duy nhất cho video', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `visits`

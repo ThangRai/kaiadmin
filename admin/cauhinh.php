@@ -606,11 +606,14 @@ $current_tab = $_GET['tab'] ?? 'general';
                 </div>
             </form>
         </div>
+        
     </div>
 </div>
 
 </div> <!-- Close container -->
-<?php include 'include/footer.php'; ?>
+<!-- <?php include 'include/footer.php'; ?> -->
+        <?php include 'include/custom-template.php'; ?>
+
 </div> <!-- Close main-panel -->
 </div> <!-- Close wrapper -->
 

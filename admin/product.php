@@ -772,6 +772,8 @@ function calculate_seo_score($title, $description, $keywords) {
                     </div>
                 </div>
             </div>
+            <?php include 'include/footer.php'; ?>
+        <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 

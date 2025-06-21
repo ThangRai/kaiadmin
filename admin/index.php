@@ -308,6 +308,8 @@ try {
                     </div>
                 </div>
             </div>
+                    <?php include 'include/custom-template.php'; ?>
+
             <?php include 'include/footer.php'; ?>
         </div>
     </div>

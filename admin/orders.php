@@ -450,6 +450,8 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
                     </div>
                 </div>
             </div>
+            <?php include 'include/footer.php'; ?>
+        <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 

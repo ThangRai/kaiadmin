@@ -727,13 +727,14 @@ function calculate_seo_score($title, $description, $keywords) {
     <tr class="category-level-<?php echo $level; ?>">
         <td><?php echo $category['id']; ?></td>
         <td>
-            <form method="POST" action="categories.php">
+            <form method="POST" action="categories.php" class="d-flex align-items-center gap-2">
                 <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
                 <input type="hidden" name="update_position" value="1">
-                <input type="number" class="form-control position-input" name="new_position" value="<?php echo htmlspecialchars($category['position']); ?>" min="0">
-                <button type="submit" class="btn btn-sm btn-primary mt-1">Cập nhật</button>
+                <input type="number" class="form-control form-control-sm" name="new_position" value="<?php echo htmlspecialchars($category['position']); ?>" min="0" style="width: 80px;">
+                <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
             </form>
         </td>
+
         <td>
             <span class="category-prefix"><?php echo $prefix; ?></span>
             <?php echo htmlspecialchars($category['title_vi']); ?>
@@ -782,7 +783,7 @@ function calculate_seo_score($title, $description, $keywords) {
             <form method="POST" action="categories.php">
                 <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
                 <input type="hidden" name="update_display_position" value="1">
-                <select name="display_position[]" class="form-control" multiple>
+                <select name="display_position[]" class="form-control">
                     <?php foreach ($display_positions as $key => $value): ?>
                         <option value="<?php echo $key; ?>">
                             <?php echo htmlspecialchars($value); ?>
@@ -815,6 +816,8 @@ function calculate_seo_score($title, $description, $keywords) {
                     </div>
                 </div>
             </div>
+            <?php include 'include/footer.php'; ?>
+        <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 

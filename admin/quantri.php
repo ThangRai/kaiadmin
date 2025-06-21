@@ -448,6 +448,8 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                     </div>
                 </div>
             </div>
+            <?php include 'include/footer.php'; ?>
+        <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 
