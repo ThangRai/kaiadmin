@@ -6,6 +6,16 @@ error_reporting(E_ALL);
 
 require 'database/config.php';
 require_once 'include/functions.php';
+require '../vendor/autoload.php';
+require 'vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 $error = '';
 $success = '';
@@ -19,18 +29,42 @@ if (isset($_GET['action']) && $_GET['action'] === 'forgot' && $_SERVER['REQUEST_
 
         if ($user) {
             $newPass = substr(str_shuffle('123456789abcdefghijklmnpqrstuvwxyz'), 0, 8);
+            $hashedPass = $newPass; // Lưu mật khẩu ở dạng thuần
             $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
-            $stmt->execute([$newPass, $email]);
+            $stmt->execute([$hashedPass, $email]);
 
-            // Gửi email đơn giản
-            $headers = "From: no-reply@kaiadmin.com\r\n";
-            $headers .= "MIME-Version: 1.0\r\n";
-            $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-            if (mail($email, "Mật khẩu mới", "Mật khẩu mới của bạn: $newPass", $headers)) {
+            // Cấu hình PHPMailer
+            $mail = new PHPMailer(true);
+            try {
+                // Cấu hình server SMTP
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com'; // Thay bằng SMTP server của bạn
+                $mail->SMTPAuth = true;
+                $mail->Username = 'badaotulong123@gmail.com'; // Email gửi
+                $mail->Password = 'nihu fluz qcla wgmh'; // Mật khẩu ứng dụng (không phải mật khẩu Gmail thông thường)
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
+
+                // Cấu hình email
+                $mail->setFrom('badaotulong123@gmail.com', 'Kaiadmin');
+                $mail->addAddress($email); // Email người nhận
+                $mail->CharSet = 'UTF-8'; // Hỗ trợ tiếng Việt
+                $mail->isHTML(true); // Gửi email dạng HTML
+                $mail->Subject = 'Mật khẩu mới cho tài khoản của bạn';
+                $mail->Body = "
+                    <h2>Mật khẩu mới</h2>
+                    <p>Xin chào,</p>
+                    <p>Mật khẩu mới của bạn là: <strong>$newPass</strong></p>
+                    <p>Vui lòng đăng nhập và đổi mật khẩu ngay sau khi nhận được email này.</p>
+                    <p>Trân trọng,<br>Kaiadmin</p>
+                ";
+                $mail->AltBody = "Mật khẩu mới của bạn là: $newPass\nVui lòng đăng nhập và đổi mật khẩu ngay.";
+
+                $mail->send();
                 $success = "Mật khẩu mới đã được gửi về email!";
-            } else {
+            } catch (Exception $e) {
                 $error = "Không thể gửi email, vui lòng thử lại!";
-                log_debug("Failed to send email to $email");
+                log_debug("Failed to send email to $email: " . $mail->ErrorInfo);
             }
         } else {
             $error = "Không tìm thấy email!";
@@ -40,6 +74,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'forgot' && $_SERVER['REQUEST_
         $error = "Lỗi hệ thống, vui lòng thử lại sau!";
     }
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_GET['action'])) {
     $username = trim($_POST['username']);

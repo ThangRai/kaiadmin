@@ -1,3 +1,7 @@
+.cke_notifications_area .cke_notification_warning {
+  display: none !important;
+}
+
 .gg-check {
   box-sizing: border-box;
   position: relative;

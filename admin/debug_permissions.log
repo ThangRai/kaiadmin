@@ -1,0 +1,544 @@
+2025-06-25 15:29:06 - Menu items fetched: Array
+(
+    [0] => Array
+        (
+            [id] => 1
+        )
+
+    [1] => Array
+        (
+            [id] => 4
+        )
+
+    [2] => Array
+        (
+            [id] => 5
+        )
+
+    [3] => Array
+        (
+            [id] => 9
+        )
+
+    [4] => Array
+        (
+            [id] => 11
+        )
+
+    [5] => Array
+        (
+            [id] => 12
+        )
+
+    [6] => Array
+        (
+            [id] => 14
+        )
+
+    [7] => Array
+        (
+            [id] => 15
+        )
+
+    [8] => Array
+        (
+            [id] => 16
+        )
+
+    [9] => Array
+        (
+            [id] => 17
+        )
+
+    [10] => Array
+        (
+            [id] => 18
+        )
+
+    [11] => Array
+        (
+            [id] => 19
+        )
+
+    [12] => Array
+        (
+            [id] => 20
+        )
+
+    [13] => Array
+        (
+            [id] => 21
+        )
+
+    [14] => Array
+        (
+            [id] => 22
+        )
+
+    [15] => Array
+        (
+            [id] => 23
+        )
+
+    [16] => Array
+        (
+            [id] => 24
+        )
+
+    [17] => Array
+        (
+            [id] => 25
+        )
+
+    [18] => Array
+        (
+            [id] => 26
+        )
+
+    [19] => Array
+        (
+            [id] => 27
+        )
+
+    [20] => Array
+        (
+            [id] => 28
+        )
+
+    [21] => Array
+        (
+            [id] => 29
+        )
+
+    [22] => Array
+        (
+            [id] => 30
+        )
+
+    [23] => Array
+        (
+            [id] => 31
+        )
+
+    [24] => Array
+        (
+            [id] => 32
+        )
+
+    [25] => Array
+        (
+            [id] => 33
+        )
+
+    [26] => Array
+        (
+            [id] => 34
+        )
+
+    [27] => Array
+        (
+            [id] => 36
+        )
+
+    [28] => Array
+        (
+            [id] => 37
+        )
+
+    [29] => Array
+        (
+            [id] => 38
+        )
+
+    [30] => Array
+        (
+            [id] => 39
+        )
+
+    [31] => Array
+        (
+            [id] => 40
+        )
+
+    [32] => Array
+        (
+            [id] => 41
+        )
+
+    [33] => Array
+        (
+            [id] => 42
+        )
+
+    [34] => Array
+        (
+            [id] => 43
+        )
+
+    [35] => Array
+        (
+            [id] => 44
+        )
+
+    [36] => Array
+        (
+            [id] => 45
+        )
+
+    [37] => Array
+        (
+            [id] => 48
+        )
+
+    [38] => Array
+        (
+            [id] => 49
+        )
+
+    [39] => Array
+        (
+            [id] => 50
+        )
+
+    [40] => Array
+        (
+            [id] => 51
+        )
+
+    [41] => Array
+        (
+            [id] => 52
+        )
+
+    [42] => Array
+        (
+            [id] => 53
+        )
+
+    [43] => Array
+        (
+            [id] => 54
+        )
+
+)
+
+2025-06-25 15:29:06 - Deleted old permissions for user ID: 1
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 1
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 4
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 5
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 9
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 11
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 12
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 14
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 15
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 16
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 17
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 18
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 19
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 20
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 21
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 22
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 23
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 24
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 25
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 26
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 27
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 28
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 29
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 30
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 31
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 32
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 33
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 34
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 36
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 37
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 38
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 39
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 40
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 41
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 42
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 43
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 44
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 45
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 48
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 49
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 50
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 51
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 52
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 53
+2025-06-25 15:29:06 - Granted full permissions for user ID: 1, menu ID: 54
+2025-06-25 15:46:53 - Menu items fetched: Array
+(
+    [0] => Array
+        (
+            [id] => 1
+        )
+
+    [1] => Array
+        (
+            [id] => 4
+        )
+
+    [2] => Array
+        (
+            [id] => 5
+        )
+
+    [3] => Array
+        (
+            [id] => 9
+        )
+
+    [4] => Array
+        (
+            [id] => 11
+        )
+
+    [5] => Array
+        (
+            [id] => 12
+        )
+
+    [6] => Array
+        (
+            [id] => 14
+        )
+
+    [7] => Array
+        (
+            [id] => 15
+        )
+
+    [8] => Array
+        (
+            [id] => 16
+        )
+
+    [9] => Array
+        (
+            [id] => 17
+        )
+
+    [10] => Array
+        (
+            [id] => 18
+        )
+
+    [11] => Array
+        (
+            [id] => 19
+        )
+
+    [12] => Array
+        (
+            [id] => 20
+        )
+
+    [13] => Array
+        (
+            [id] => 21
+        )
+
+    [14] => Array
+        (
+            [id] => 22
+        )
+
+    [15] => Array
+        (
+            [id] => 23
+        )
+
+    [16] => Array
+        (
+            [id] => 24
+        )
+
+    [17] => Array
+        (
+            [id] => 25
+        )
+
+    [18] => Array
+        (
+            [id] => 26
+        )
+
+    [19] => Array
+        (
+            [id] => 27
+        )
+
+    [20] => Array
+        (
+            [id] => 28
+        )
+
+    [21] => Array
+        (
+            [id] => 29
+        )
+
+    [22] => Array
+        (
+            [id] => 30
+        )
+
+    [23] => Array
+        (
+            [id] => 31
+        )
+
+    [24] => Array
+        (
+            [id] => 32
+        )
+
+    [25] => Array
+        (
+            [id] => 33
+        )
+
+    [26] => Array
+        (
+            [id] => 34
+        )
+
+    [27] => Array
+        (
+            [id] => 36
+        )
+
+    [28] => Array
+        (
+            [id] => 37
+        )
+
+    [29] => Array
+        (
+            [id] => 38
+        )
+
+    [30] => Array
+        (
+            [id] => 39
+        )
+
+    [31] => Array
+        (
+            [id] => 40
+        )
+
+    [32] => Array
+        (
+            [id] => 41
+        )
+
+    [33] => Array
+        (
+            [id] => 42
+        )
+
+    [34] => Array
+        (
+            [id] => 43
+        )
+
+    [35] => Array
+        (
+            [id] => 44
+        )
+
+    [36] => Array
+        (
+            [id] => 45
+        )
+
+    [37] => Array
+        (
+            [id] => 48
+        )
+
+    [38] => Array
+        (
+            [id] => 49
+        )
+
+    [39] => Array
+        (
+            [id] => 50
+        )
+
+    [40] => Array
+        (
+            [id] => 51
+        )
+
+    [41] => Array
+        (
+            [id] => 52
+        )
+
+    [42] => Array
+        (
+            [id] => 53
+        )
+
+    [43] => Array
+        (
+            [id] => 54
+        )
+
+    [44] => Array
+        (
+            [id] => 55
+        )
+
+)
+
+2025-06-25 15:46:53 - Deleted old permissions for user ID: 1
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 1
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 4
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 5
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 9
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 11
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 12
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 14
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 15
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 16
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 17
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 18
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 19
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 20
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 21
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 22
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 23
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 24
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 25
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 26
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 27
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 28
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 29
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 30
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 31
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 32
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 33
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 34
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 36
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 37
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 38
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 39
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 40
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 41
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 42
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 43
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 44
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 45
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 48
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 49
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 50
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 51
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 52
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 53
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 54
+2025-06-25 15:46:53 - Granted full permissions for user ID: 1, menu ID: 55

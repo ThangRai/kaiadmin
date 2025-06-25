@@ -60,24 +60,43 @@ try {
     // Chuyển mảng doanh thu thành dạng tuần tự
     $revenues = array_values($revenues);
 
-    // Thống kê lượt truy cập (7 ngày gần nhất)
-    $stmt = $pdo->prepare("
-        SELECT DATE(visit_date) as date, SUM(visit_count) as visits
-        FROM visits
-        WHERE visit_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-        GROUP BY date
-        ORDER BY date
-    ");
-    $stmt->execute();
-    $visit_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Thống kê lượt truy cập (7 ngày gần nhất) từ bảng userlog
+    try {
+        $stmt = $pdo->prepare("
+            SELECT DATE(login_time) as date, COUNT(*) as visits
+            FROM userlog
+            WHERE login_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            AND status = 'success' -- Chỉ tính các lượt đăng nhập thành công
+            GROUP BY date
+            ORDER BY date
+        ");
+        $stmt->execute();
+        $visit_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $visit_dates = [];
-    $visit_counts = [];
-    foreach ($visit_data as $row) {
-        $visit_dates[] = $row['date'];
-        $visit_counts[] = (int)$row['visits'];
+        $visit_dates = [];
+        $visit_counts = [];
+        // Điền dữ liệu vào mảng
+        $currentDate = new DateTime();
+        $dates = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $dates[] = (clone $currentDate)->modify("-$i days")->format('Y-m-d');
+        }
+
+        // Khởi tạo số lượt truy cập bằng 0 cho tất cả các ngày
+        $visit_counts = array_fill(0, 7, 0);
+        foreach ($visit_data as $row) {
+            $index = array_search($row['date'], $dates);
+            if ($index !== false) {
+                $visit_counts[$index] = (int)$row['visits'];
+            }
+        }
+        $visit_dates = $dates;
+
+    } catch (Exception $e) {
+        log_debug('Userlog statistics error: ' . $e->getMessage() . ' at line ' . $e->getLine());
+        $_SESSION['toast_message'] = 'Lỗi tải dữ liệu thống kê truy cập!';
+        $_SESSION['toast_type'] = 'error';
     }
-
     // Thống kê tất cả khách hàng
     $stmt = $pdo->prepare("
         SELECT 

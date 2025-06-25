@@ -285,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_visible'])) {
                                 </div>
                                 <div class="card-body">
                                     <!-- Bộ lọc -->
-                                    <form class="filter-form mb-4" method="GET">
+                                    <!-- <form class="filter-form mb-4" method="GET">
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="form-group">
@@ -309,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_visible'])) {
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+                                    </form> -->
                                     <!-- Danh sách -->
                                     <div class="table-responsive">
                                         <table id="menuTable" class="table table-hover">
@@ -499,7 +499,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_visible'])) {
             
         </div>
     </div>
-    <?php include 'include/footer.php'; ?>
         <?php include 'include/custom-template.php'; ?>
 
     <!-- Core JS Files -->
@@ -519,10 +518,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_visible'])) {
             // Khởi tạo DataTables
             $('#menuTable').DataTable({
                 order: [[1, 'asc']],
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
-                },
-                searching: false,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+            },
+                searching: true,
                 lengthChange: true,
                 lengthMenu: [10, 25, 50, 100]
             });

@@ -199,6 +199,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_embed'])) {
     exit;
 }
 
+// Xử lý form Vận chuyển
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_shipping'])) {
+    $shipping_config = [
+        'inner_cities' => [],
+        'inner_city_fees' => [],
+        'outer_city_fees' => [],
+        'free_shipping_threshold' => $_POST['free_shipping_threshold'] ?? 0
+    ];
+
+    // Xử lý khu vực nội thành
+    if (!empty($_POST['inner_cities'])) {
+        foreach ($_POST['inner_cities'] as $city) {
+            $shipping_config['inner_cities'][] = [
+                'province_id' => $city['province_id'] ?? '',
+                'district_id' => $city['district_id'] ?? '',
+                'ward_id' => $city['ward_id'] ?? '',
+                'street' => $city['street'] ?? ''
+            ];
+        }
+    }
+
+    // Xử lý phí nội thành
+    if (!empty($_POST['inner_city_fees'])) {
+        foreach ($_POST['inner_city_fees'] as $fee) {
+            if (!empty($fee['amount'])) {
+                $shipping_config['inner_city_fees'][] = [
+                    'description' => $fee['description'] ?? '',
+                    'amount' => (float)$fee['amount']
+                ];
+            }
+        }
+    }
+
+    // Xử lý phí ngoại thành
+    if (!empty($_POST['outer_city_fees'])) {
+        foreach ($_POST['outer_city_fees'] as $fee) {
+            if (!empty($fee['amount'])) {
+                $shipping_config['outer_city_fees'][] = [
+                    'description' => $fee['description'] ?? '',
+                    'amount' => (float)$fee['amount']
+                ];
+            }
+        }
+    }
+
+    saveSetting($pdo, 'shipping_config', json_encode($shipping_config));
+
+    $_SESSION['toast_message'] = 'Cập nhật cấu hình vận chuyển thành công!';
+    $_SESSION['toast_type'] = 'success';
+    header("Location: cauhinh.php?tab=shipping");
+    exit;
+}
+
 // Lấy dữ liệu
 $website_status = getSetting($pdo, 'website_status', '1');
 $favicon = getSetting($pdo, 'favicon');
@@ -208,6 +261,7 @@ $smtp = json_decode(getSetting($pdo, 'smtp', '{}'), true);
 $colors = json_decode(getSetting($pdo, 'colors', '{}'), true);
 $fonts = json_decode(getSetting($pdo, 'fonts', '{}'), true);
 $embed_codes = json_decode(getSetting($pdo, 'embed_codes', '{}'), true);
+$shipping_config = json_decode(getSetting($pdo, 'shipping_config', '{}'), true);
 
 // Lấy danh sách liên hệ
 $stmt = $pdo->query("SELECT * FROM contact_info ORDER BY id DESC");
@@ -242,11 +296,9 @@ $current_tab = $_GET['tab'] ?? 'general';
     <link rel="stylesheet" href="assets/css/demo.css">
     <!-- iZitoast CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
-    <!-- Bootstrap Colorpicker CSS -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/css/bootstrap-colorpicker.min.css"> -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css" />
-<style>
+    <!-- Spectrum Colorpicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css" />
+    <style>
         .nav-tabs .nav-link.active {
             background-color: #fff;
             border-color: #dee2e6 #dee2e6 #fff;
@@ -259,7 +311,7 @@ $current_tab = $_GET['tab'] ?? 'general';
             border-radius: 0 0 4px 4px;
         }
         .contact-image {
-            max-width: 100px;
+            max-width: 70px;
             height: auto;
         }
         .colorpicker {
@@ -274,6 +326,18 @@ $current_tab = $_GET['tab'] ?? 'general';
         .form-header .btn-primary {
             padding: 8px 20px;
         }
+        .inner-city-group, .fee-group {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .inner-city-group .form-row, .fee-group .form-row {
+            margin-bottom: 10px;
+        }
+        .remove-btn {
+            margin-top: 32px;
+        }
         @media (max-width: 768px) {
             .tab-content {
                 padding: 10px;
@@ -287,6 +351,9 @@ $current_tab = $_GET['tab'] ?? 'general';
             .form-header .btn-primary {
                 padding: 6px 15px;
                 font-size: 0.9rem;
+            }
+            .remove-btn {
+                margin-top: 0;
             }
         }
     </style>
@@ -339,6 +406,9 @@ $current_tab = $_GET['tab'] ?? 'general';
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link <?php echo $current_tab === 'embed' ? 'active' : ''; ?>" id="embed-tab" data-toggle="tab" href="#embed">Mã nhúng</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link <?php echo $current_tab === 'shipping' ? 'active' : ''; ?>" id="shipping-tab" data-toggle="tab" href="#shipping">Vận chuyển</a>
                                         </li>
                                     </ul>
                                     <div class="tab-content" id="configTabsContent">
@@ -531,6 +601,120 @@ $current_tab = $_GET['tab'] ?? 'general';
                                                 </div>
                                             </form>
                                         </div>
+                                        <!-- Tab Vận chuyển -->
+                                        <div class="tab-pane fade <?php echo $current_tab === 'shipping' ? 'show active' : ''; ?>" id="shipping">
+                                            <form method="POST" id="shipping-form">
+                                                <div class="form-header d-flex justify-content-end">
+                                                    <button type="submit" name="save_shipping" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                                <!-- Khu vực nội thành -->
+                                                <div class="form-group">
+                                                    <label>Khu vực nội thành</label>
+                                                    <div id="inner-cities-container">
+                                                        <?php 
+                                                        $inner_cities = $shipping_config['inner_cities'] ?? [];
+                                                        if (empty($inner_cities)) {
+                                                            $inner_cities[] = ['province_id' => '', 'district_id' => '', 'ward_id' => '', 'street' => ''];
+                                                        }
+                                                        foreach ($inner_cities as $index => $city): ?>
+                                                            <div class="inner-city-group" data-province-id="<?php echo htmlspecialchars($city['province_id']); ?>" data-district-id="<?php echo htmlspecialchars($city['district_id']); ?>" data-ward-id="<?php echo htmlspecialchars($city['ward_id']); ?>">
+                                                                <div class="form-row">
+                                                                    <div class="col-md-3">
+                                                                        <label>Tỉnh/Thành</label>
+                                                                        <select name="inner_cities[<?php echo $index; ?>][province_id]" class="form-control province-select">
+                                                                            <option value="">Chọn tỉnh/thành</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>Quận/Huyện</label>
+                                                                        <select name="inner_cities[<?php echo $index; ?>][district_id]" class="form-control district-select" disabled>
+                                                                            <option value="">Chọn quận/huyện</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>Phường/Xã</label>
+                                                                        <select name="inner_cities[<?php echo $index; ?>][ward_id]" class="form-control ward-select" disabled>
+                                                                            <option value="">Chọn phường/xã</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <label>Số nhà</label>
+                                                                        <input type="text" name="inner_cities[<?php echo $index; ?>][street]" class="form-control" value="<?php echo htmlspecialchars($city['street']); ?>">
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        <button type="button" class="btn btn-danger remove-btn remove-city">Xóa</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                    <button type="button" class="btn btn-secondary mt-2" id="add-city">Thêm khu vực</button>
+                                                </div>
+                                                <!-- Phí nội thành -->
+                                                <div class="form-group">
+                                                    <label>Phí vận chuyển nội thành</label>
+                                                    <div id="inner-city-fees-container">
+                                                        <?php 
+                                                        $inner_fees = $shipping_config['inner_city_fees'] ?? [];
+                                                        if (empty($inner_fees)) {
+                                                            $inner_fees[] = ['description' => '', 'amount' => ''];
+                                                        }
+                                                        foreach ($inner_fees as $index => $fee): ?>
+                                                            <div class="fee-group">
+                                                                <div class="form-row">
+                                                                    <div class="col-md-6">
+                                                                        <label>Mô tả</label>
+                                                                        <input type="text" name="inner_city_fees[<?php echo $index; ?>][description]" class="form-control" value="<?php echo htmlspecialchars($fee['description']); ?>">
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label>Giá (VNĐ)</label>
+                                                                        <input type="number" name="inner_city_fees[<?php echo $index; ?>][amount]" class="form-control" value="<?php echo htmlspecialchars($fee['amount']); ?>" min="0">
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        <button type="button" class="btn btn-danger remove-btn remove-fee">Xóa</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                    <button type="button" class="btn btn-secondary mt-2" id="add-inner-fee">Thêm phí nội thành</button>
+                                                </div>
+                                                <!-- Phí ngoại thành -->
+                                                <div class="form-group">
+                                                    <label>Phí vận chuyển ngoại thành</label>
+                                                    <div id="outer-city-fees-container">
+                                                        <?php 
+                                                        $outer_fees = $shipping_config['outer_city_fees'] ?? [];
+                                                        if (empty($outer_fees)) {
+                                                            $outer_fees[] = ['description' => '', 'amount' => ''];
+                                                        }
+                                                        foreach ($outer_fees as $index => $fee): ?>
+                                                            <div class="fee-group">
+                                                                <div class="form-row">
+                                                                    <div class="col-md-6">
+                                                                        <label>Mô tả</label>
+                                                                        <input type="text" name="outer_city_fees[<?php echo $index; ?>][description]" class="form-control" value="<?php echo htmlspecialchars($fee['description']); ?>">
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label>Giá (VNĐ)</label>
+                                                                        <input type="number" name="outer_city_fees[<?php echo $index; ?>][amount]" class="form-control" value="<?php echo htmlspecialchars($fee['amount']); ?>" min="0">
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        <button type="button" class="btn btn-danger remove-btn remove-fee">Xóa</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                    <button type="button" class="btn btn-secondary mt-2" id="add-outer-fee">Thêm phí ngoại thành</button>
+                                                </div>
+                                                <!-- Miễn phí vận chuyển -->
+                                                <div class="form-group">
+                                                    <label>Miễn phí vận chuyển nếu đơn hàng lớn hơn (VNĐ)</label>
+                                                    <input type="number" name="free_shipping_threshold" class="form-control" value="<?php echo htmlspecialchars($shipping_config['free_shipping_threshold'] ?? '0'); ?>" min="0">
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -547,7 +731,7 @@ $current_tab = $_GET['tab'] ?? 'general';
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addContactModalLabel">Thêm liên hệ</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <form method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
@@ -575,160 +759,378 @@ $current_tab = $_GET['tab'] ?? 'general';
     </div>
 
     <!-- Modal Sửa liên hệ -->
-<div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editContactModalLabel">Sửa liên hệ</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editContactModalLabel">Sửa liên hệ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="contact_id" id="edit_contact_id">
+                        <div class="form-group">
+                            <label>Ảnh</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                            <img id="edit_contact_image" class="contact-image mt-2" style="display: none;" alt="Contact">
+                        </div>
+                        <div class="form-group">
+                            <label>Liên kết</label>
+                            <input type="text" name="link" id="edit_contact_link" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label">
+                                <input type="checkbox" name="is_visible" id="edit_contact_visible" class="form-check-input"> Hiển thị
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" name="save_contact" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </form>
             </div>
-            <form method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="hidden" name="contact_id" id="edit_contact_id">
-                    <div class="form-group">
-                        <label>Ảnh</label>
-                        <input type="file" name="image" class="form-control" accept="image/*">
-                        <img id="edit_contact_image" class="contact-image mt-2" style="display: none;" alt="Contact">
-                    </div>
-                    <div class="form-group">
-                        <label>Liên kết</label>
-                        <input type="text" name="link" id="edit_contact_link" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-check-label">
-                            <input type="checkbox" name="is_visible" id="edit_contact_visible" class="form-check-input"> Hiển thị
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" name="save_contact" class="btn btn-primary">Cập nhật</button>
-                </div>
-            </form>
         </div>
-        
     </div>
-</div>
 
-</div> <!-- Close container -->
-<!-- <?php include 'include/footer.php'; ?> -->
-        <?php include 'include/custom-template.php'; ?>
+    <?php include 'include/custom-template.php'; ?>
+    <!-- Core JS Files -->
+    <script src="assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/core/popper.min.js"></script>
+    <script src="assets/js/core/bootstrap.min.js"></script>
+    <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="assets/js/plugin/chart.js/chart.min.js"></script>
+    <script src="assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script src="assets/js/plugin/chart-circle/circles.min.js"></script>
+    <script src="assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/world.js"></script>
+    <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="assets/js/kaiadmin.min.js"></script>
+    <script src="assets/js/setting-demo.js"></script>
+    <!-- iZitoast JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Khởi tạo colorpicker
+            $(".colorpicker").spectrum({
+                showInput: true,
+                showPalette: false,
+                showButtons: false,
+                preferredFormat: "hex",
+                showInitial: true,
+                clickoutFiresChange: true
+            });
 
-</div> <!-- Close main-panel -->
-</div> <!-- Close wrapper -->
+            // Xử lý bật/tắt liên hệ
+            $('.toggle-visibility').on('click', function() {
+                var $this = $(this);
+                var id = $this.data('id');
+                var is_visible = $this.data('visible') ? 0 : 1;
 
-<!-- Core JS Files -->
-<script src="assets/js/core/jquery-3.7.1.min.js"></script>
-<script src="assets/js/core/popper.min.js"></script>
-<script src="assets/js/core/bootstrap.min.js"></script>
-<script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-<script src="assets/js/plugin/chart.js/chart.min.js"></script>
-<script src="assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
-<script src="assets/js/plugin/chart-circle/circles.min.js"></script>
-<script src="assets/js/plugin/datatables/datatables.min.js"></script>
-<script src="assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-<script src="assets/js/plugin/jsvectormap/world.js"></script>
-<script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-<script src="assets/js/kaiadmin.min.js"></script>
-<script src="assets/js/setting-demo.js"></script>
-<!-- iZitoast JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Khởi tạo colorpicker
-        $(".colorpicker").spectrum({
-            showInput: true,
-            showPalette: false,
-            showButtons: false,
-            preferredFormat: "hex",
-            showInitial: true,
-            clickoutFiresChange: true
-        });
-
-        // Xử lý bật/tắt liên hệ
-        $('.toggle-visibility').on('click', function() {
-            var $this = $(this);
-            var id = $this.data('id');
-            var is_visible = $this.data('visible') ? 0 : 1;
-
-            $.ajax({
-                url: 'cauhinh.php',
-                method: 'POST',
-                data: { toggle_contact_visible: true, id: id, is_visible: is_visible },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        $this.data('visible', is_visible);
-                        $this.toggleClass('fa-eye fa-eye-slash text-success text-danger');
-                        iziToast.success({
-                            title: 'Thành công',
-                            message: 'Cập nhật trạng thái hiển thị thành công',
-                            position: 'topRight'
-                        });
-                    } else {
+                $.ajax({
+                    url: 'cauhinh.php',
+                    method: 'POST',
+                    data: { toggle_contact_visible: true, id: id, is_visible: is_visible },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            $this.data('visible', is_visible);
+                            $this.toggleClass('fa-eye fa-eye-slash text-success text-danger');
+                            iziToast.success({
+                                title: 'Thành công',
+                                message: 'Cập nhật trạng thái hiển thị thành công',
+                                position: 'topRight'
+                            });
+                        } else {
+                            iziToast.error({
+                                title: 'Lỗi',
+                                message: 'Cập nhật trạng thái thất bại',
+                                position: 'topRight'
+                            });
+                        }
+                    },
+                    error: function() {
                         iziToast.error({
                             title: 'Lỗi',
-                            message: 'Cập nhật trạng thái thất bại',
+                            message: 'Không thể kết nối server',
                             position: 'topRight'
                         });
                     }
-                },
-                error: function() {
-                    iziToast.error({
-                        title: 'Lỗi',
-                        message: 'Không thể kết nối server',
-                        position: 'topRight'
-                    });
-                }
+                });
             });
-        });
 
-        // Xử lý modal sửa liên hệ
-        $('.edit-contact').on('click', function() {
-            var id = $(this).data('id');
-            $.ajax({
-                url: 'fetch_contact.php',
-                method: 'POST',
-                data: { id: id },
-                dataType: 'json',
-                success: function(data) {
-                    $('#edit_contact_id').val(data.id);
-                    $('#edit_contact_link').val(data.link);
-                    $('#edit_contact_visible').prop('checked', data.is_visible == 1);
-                    if (data.image) {
-                        $('#edit_contact_image').attr('src', data.image).show();
-                    } else {
-                        $('#edit_contact_image').hide();
+            // Xử lý modal sửa liên hệ
+            $('.edit-contact').on('click', function() {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: 'fetch_contact.php',
+                    method: 'POST',
+                    data: { id: id },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#edit_contact_id').val(data.id);
+                        $('#edit_contact_link').val(data.link);
+                        $('#edit_contact_visible').prop('checked', data.is_visible == 1);
+                        if (data.image) {
+                            $('#edit_contact_image').attr('src', data.image).show();
+                        } else {
+                            $('#edit_contact_image').hide();
+                        }
+                    },
+                    error: function() {
+                        iziToast.error({
+                            title: 'Lỗi',
+                            message: 'Không thể tải dữ liệu liên hệ',
+                            position: 'topRight'
+                        });
                     }
-                },
-                error: function() {
-                    iziToast.error({
-                        title: 'Lỗi',
-                        message: 'Không thể tải dữ liệu liên hệ',
+                });
+            });
+
+            // Xử lý thêm khu vực nội thành
+            let cityIndex = <?php echo count($inner_cities); ?>;
+            $('#add-city').on('click', function() {
+                const newCityHtml = `
+                    <div class="inner-city-group">
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <label>Tỉnh/Thành</label>
+                                <select name="inner_cities[${cityIndex}][province_id]" class="form-control province-select">
+                                    <option value="">Chọn tỉnh/thành</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Quận/Huyện</label>
+                                <select name="inner_cities[${cityIndex}][district_id]" class="form-control district-select" disabled>
+                                    <option value="">Chọn quận/huyện</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Phường/Xã</label>
+                                <select name="inner_cities[${cityIndex}][ward_id]" class="form-control ward-select" disabled>
+                                    <option value="">Chọn phường/xã</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số nhà</label>
+                                <input type="text" name="inner_cities[${cityIndex}][street]" class="form-control">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger remove-btn remove-city">Xóa</button>
+                            </div>
+                        </div>
+                    </div>`;
+                $('#inner-cities-container').append(newCityHtml);
+                loadProvinces($(`select[name="inner_cities[${cityIndex}][province_id]"]`));
+                cityIndex++;
+            });
+
+            // Xử lý xóa khu vực nội thành
+            $(document).on('click', '.remove-city', function() {
+                if ($('.inner-city-group').length > 1) {
+                    $(this).closest('.inner-city-group').remove();
+                } else {
+                    iziToast.warning({
+                        title: 'Cảnh báo',
+                        message: 'Phải có ít nhất một khu vực nội thành',
                         position: 'topRight'
                     });
                 }
             });
-        });
 
-        // iZitoast notification
-        <?php if (isset($_SESSION['toast_message']) && isset($_SESSION['toast_type'])): ?>
-            iziToast.<?php echo $_SESSION['toast_type']; ?>({
-                title: '<?php echo $_SESSION['title'] ?? ($_SESSION['toast_type'] === 'success' ? 'Thành công' : 'Lỗi'); ?>',
-                message: '<?php echo $_SESSION['toast_message']; ?>',
-                position: 'topRight',
-                timeout: 6000
+            // Xử lý thêm phí nội thành
+            let innerFeeIndex = <?php echo count($inner_fees); ?>;
+            $('#add-inner-fee').on('click', function() {
+                const newFeeHtml = `
+                    <div class="fee-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label>Mô tả</label>
+                                <input type="text" name="inner_city_fees[${innerFeeIndex}][description]" class="form-control">
+                            </div>
+                            <div class="col-md-5">
+                                <label>Giá (VNĐ)</label>
+                                <input type="number" name="inner_city_fees[${innerFeeIndex}][amount]" class="form-control" min="0">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger remove-btn remove-fee">Xóa</button>
+                            </div>
+                        </div>
+                    </div>`;
+                $('#inner-city-fees-container').append(newFeeHtml);
+                innerFeeIndex++;
             });
-            <?php
-            unset($_SESSION['toast_message']);
-            unset($_SESSION['toast_type']);
-            unset($_SESSION['title']);
-            ?>
-        <?php endif; ?>
-    });
-</script>
-<?php ob_end_flush(); ?>
+
+            // Xử lý thêm phí ngoại thành
+            let outerFeeIndex = <?php echo count($outer_fees); ?>;
+            $('#add-outer-fee').on('click', function() {
+                const newFeeHtml = `
+                    <div class="fee-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label>Mô tả</label>
+                                <input type="text" name="outer_city_fees[${outerFeeIndex}][description]" class="form-control">
+                            </div>
+                            <div class="col-md-5">
+                                <label>Giá (VNĐ)</label>
+                                <input type="number" name="outer_city_fees[${outerFeeIndex}][amount]" class="form-control" min="0">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger remove-btn remove-fee">Xóa</button>
+                            </div>
+                        </div>
+                    </div>`;
+                $('#outer-city-fees-container').append(newFeeHtml);
+                outerFeeIndex++;
+            });
+
+            // Xử lý xóa phí
+            $(document).on('click', '.remove-fee', function() {
+                if ($(this).closest('.fee-group').siblings('.fee-group').length > 0) {
+                    $(this).closest('.fee-group').remove();
+                } else {
+                    iziToast.warning({
+                        title: 'Cảnh báo',
+                        message: 'Phải có ít nhất một mức phí',
+                        position: 'topRight'
+                    });
+                }
+            });
+
+            // Tải danh sách tỉnh/thành
+            function loadProvinces($select, selectedId = '') {
+                $.ajax({
+                    url: 'https://provinces.open-api.vn/api/p/',
+                    method: 'GET',
+                    async: false,
+                    success: function(data) {
+                        $select.empty().append('<option value="">Chọn tỉnh/thành</option>');
+                        data.forEach(province => {
+                            $select.append(`<option value="${province.code}" ${selectedId == province.code ? 'selected' : ''}>${province.name}</option>`);
+                        });
+                    },
+                    error: function() {
+                        iziToast.error({
+                            title: 'Lỗi',
+                            message: 'Không thể tải danh sách tỉnh/thành',
+                            position: 'topRight'
+                        });
+                    }
+                });
+            }
+
+            // Tải danh sách quận/huyện
+            function loadDistricts($provinceSelect, $districtSelect, selectedId = '') {
+                const provinceId = $provinceSelect.val();
+                $districtSelect.empty().append('<option value="">Chọn quận/huyện</option>').prop('disabled', true);
+                if (provinceId) {
+                    $.ajax({
+                        url: `https://provinces.open-api.vn/api/p/${provinceId}?depth=2`,
+                        method: 'GET',
+                        async: false,
+                        success: function(data) {
+                            $districtSelect.prop('disabled', false);
+                            data.districts.forEach(district => {
+                                $districtSelect.append(`<option value="${district.code}" ${selectedId == district.code ? 'selected' : ''}>${district.name}</option>`);
+                            });
+                        },
+                        error: function() {
+                            iziToast.error({
+                                title: 'Lỗi',
+                                message: 'Không thể tải danh sách quận/huyện',
+                                position: 'topRight'
+                            });
+                        }
+                    });
+                }
+            }
+
+            // Tải danh sách phường/xã
+            function loadWards($districtSelect, $wardSelect, selectedId = '') {
+                const districtId = $districtSelect.val();
+                $wardSelect.empty().append('<option value="">Chọn phường/xã</option>').prop('disabled', true);
+                if (districtId) {
+                    $.ajax({
+                        url: `https://provinces.open-api.vn/api/d/${districtId}?depth=2`,
+                        method: 'GET',
+                        async: false,
+                        success: function(data) {
+                            $wardSelect.prop('disabled', false);
+                            data.wards.forEach(ward => {
+                                $wardSelect.append(`<option value="${ward.code}" ${selectedId == ward.code ? 'selected' : ''}>${ward.name}</option>`);
+                            });
+                        },
+                        error: function() {
+                            iziToast.error({
+                                title: 'Lỗi',
+                                message: 'Không thể tải danh sách phường/xã',
+                                position: 'topRight'
+                            });
+                        }
+                    });
+                }
+            }
+
+            // Khởi tạo danh sách tỉnh/thành cho tất cả select
+            $('.inner-city-group').each(function() {
+                const $cityGroup = $(this);
+                const $provinceSelect = $cityGroup.find('.province-select');
+                const $districtSelect = $cityGroup.find('.district-select');
+                const $wardSelect = $cityGroup.find('.ward-select');
+
+                const provinceId = $cityGroup.data('province-id') || '';
+                const districtId = $cityGroup.data('district-id') || '';
+                const wardId = $cityGroup.data('ward-id') || '';
+
+                // Tải tỉnh/thành và gán giá trị đã chọn
+                loadProvinces($provinceSelect, provinceId);
+
+                // Tải quận/huyện nếu có provinceId
+                if (provinceId) {
+                    loadDistricts($provinceSelect, $districtSelect, districtId);
+                }
+
+                // Tải phường/xã nếu có districtId
+                if (districtId) {
+                    loadWards($districtSelect, $wardSelect, wardId);
+                }
+            });
+
+            // Xử lý thay đổi tỉnh/thành
+            $(document).on('change', '.province-select', function() {
+                const $cityGroup = $(this).closest('.inner-city-group');
+                const $districtSelect = $cityGroup.find('.district-select');
+                const $wardSelect = $cityGroup.find('.ward-select');
+                loadDistricts($(this), $districtSelect);
+                $wardSelect.empty().append('<option value="">Chọn phường/xã</option>').prop('disabled', true);
+            });
+
+            // Xử lý thay đổi quận/huyện
+            $(document).on('change', '.district-select', function() {
+                const $cityGroup = $(this).closest('.inner-city-group');
+                const $wardSelect = $cityGroup.find('.ward-select');
+                loadWards($(this), $wardSelect);
+            });
+
+            // iZitoast notification
+            <?php if (isset($_SESSION['toast_message']) && isset($_SESSION['toast_type'])): ?>
+                iziToast.<?php echo $_SESSION['toast_type']; ?>({
+                    title: '<?php echo $_SESSION['title'] ?? ($_SESSION['toast_type'] === 'success' ? 'Thành công' : 'Lỗi'); ?>',
+                    message: '<?php echo $_SESSION['toast_message']; ?>',
+                    position: 'topRight',
+                    timeout: 6000
+                });
+                <?php
+                unset($_SESSION['toast_message']);
+                unset($_SESSION['toast_type']);
+                unset($_SESSION['title']);
+                ?>
+            <?php endif; ?>
+        });
+    </script>
+    <?php ob_end_flush(); ?>
 </body>
 </html>

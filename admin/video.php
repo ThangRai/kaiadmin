@@ -29,6 +29,15 @@ function generate_slug($string) {
     return $string;
 }
 
+// Get YouTube thumbnail
+function get_youtube_thumbnail($url) {
+    $video_id = '';
+    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/', $url, $matches)) {
+        $video_id = $matches[1];
+    }
+    return $video_id ? "https://img.youtube.com/vi/$video_id/hqdefault.jpg" : '';
+}
+
 // Handle toggle status
 if (isset($_POST['toggle_status'])) {
     $video_id = $_POST['video_id'];
@@ -446,6 +455,7 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                                     <tr>
                                                         <th>ID</th>
                                                         <th>Sắp xếp</th>
+                                                        <th>Hình ảnh</th>
                                                         <th>Tiêu đề</th>
                                                         <th>Link YouTube</th>
                                                         <th>Hiển thị</th>
@@ -464,6 +474,13 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                                                     <input type="number" class="form-control form-control-sm" name="new_position" value="<?php echo htmlspecialchars($video['position']); ?>" min="0" style="width: 80px;">
                                                                     <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
                                                                 </form>
+                                                            </td>
+                                                            <td>
+                                                                <?php if ($video['link_vi']): ?>
+                                                                    <img src="<?php echo htmlspecialchars(get_youtube_thumbnail($video['link_vi'])); ?>" alt="Thumbnail" style="max-width: 100px; height: auto;">
+                                                                <?php else: ?>
+                                                                    -
+                                                                <?php endif; ?>
                                                             </td>
                                                             <td><?php echo htmlspecialchars($video['title_vi']); ?></td>
                                                             <td>
@@ -528,7 +545,7 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                 </div>
             </div>
             <?php include 'include/footer.php'; ?>
-        <?php include 'include/custom-template.php'; ?>
+            <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 
@@ -585,3 +602,5 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
         });
     </script>
     <?php ob_end_flush(); ?>
+</body>
+</html>

@@ -1,1 +1,5 @@
-/vendor/
+/backups/*
+/uploads/*
+database/config.php
+.env
+/vendor/*
