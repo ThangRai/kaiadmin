@@ -205,7 +205,7 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
     <link rel="stylesheet" href="assets/css/demo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
-    <script src="https://cdn.ckeditor.com/4.22.0/standard/ckeditor.js"></script>
+    <script src="ckeditor/ckeditor.js"></script>
     <style>
         .add-btn { position: absolute; top: 20px; right: 20px; }
         .table-responsive { margin-bottom: 1rem; }

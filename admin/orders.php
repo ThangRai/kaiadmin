@@ -3,10 +3,16 @@ ob_start();
 session_start();
 require 'database/config.php';
 require_once 'include/functions.php';
-require 'vendor/autoload.php'; // PHPMailer
+require '../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['user_id'])) {
@@ -210,6 +216,86 @@ if (isset($_GET['delete_id'])) {
     exit;
 }
 
+// Xử lý xuất Excel
+if (isset($_GET['export_excel']) && $_GET['export_excel'] == 1) {
+    try {
+        // Lấy danh sách đơn hàng
+        $stmt = $pdo->query("SELECT o.*, 
+                             CASE 
+                                 WHEN o.payment_method = 'cash' THEN 'Tiền mặt'
+                                 WHEN o.payment_method = 'bank_transfer' THEN 'Chuyển khoản'
+                                 ELSE 'Không xác định'
+                             END AS payment_method_label
+                             FROM orders o 
+                             ORDER BY o.created_at DESC");
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Tạo đối tượng Spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Danh sách đơn hàng');
+
+        // Định dạng tiêu đề
+        $headers = [
+            'A' => 'ID',
+            'B' => 'Tên Khách Hàng',
+            'C' => 'Số Điện Thoại',
+            'D' => 'Tổng Tiền (đ)',
+            'E' => 'Phương Thức Thanh Toán',
+            'F' => 'Trạng Thái',
+            'G' => 'Ngày Tạo'
+        ];
+
+        // Ghi tiêu đề
+        foreach ($headers as $key => $value) {
+            $sheet->setCellValue($key . '1', $value);
+            $sheet->getStyle($key . '1')->getFont()->setBold(true);
+            $sheet->getStyle($key . '1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle($key . '1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFCCCCCC');
+            $sheet->getColumnDimension($key)->setAutoSize(true);
+        }
+
+        // Ghi dữ liệu
+        $row = 2;
+        foreach ($orders as $order) {
+            $sheet->setCellValue('A' . $row, $order['id']);
+            $sheet->setCellValue('B' . $row, $order['customer_name']);
+            $sheet->setCellValue('C' . $row, $order['phone']);
+            $sheet->setCellValue('D' . $row, number_format($order['total'], 0, ',', '.'));
+            $sheet->setCellValue('E' . $row, $order['payment_method_label']);
+            $sheet->setCellValue('F' . $row, getStatusLabel($order['status']));
+            $sheet->setCellValue('G' . $row, $order['created_at']);
+            $row++;
+        }
+
+        // Áp dụng viền
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ],
+        ];
+        $sheet->getStyle('A1:G' . ($row - 1))->applyFromArray($styleArray);
+
+        // Xuất file
+        $filename = 'Danh_sach_don_hang_' . date('Ymd_His') . '.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
+    } catch (Exception $e) {
+        log_debug('Export Excel error: ' . $e->getMessage());
+        $_SESSION['toast_message'] = 'Lỗi xuất file Excel: ' . $e->getMessage();
+        $_SESSION['toast_type'] = 'error';
+        header("Location: orders.php");
+        exit;
+    }
+}
+
 // Xử lý hiển thị chi tiết đơn hàng
 $show_form = false;
 $order = null;
@@ -286,8 +372,8 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
     <script src="assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
         WebFont.load({
-            google: {"families"},
-            custom: {"families":["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['assets/css/fonts.min.css']},
+            google: {"families": ["Open Sans:300,400,600,700"]},
+            custom: {"families": ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['assets/css/fonts.min.css']},
             active: function() {
                 sessionStorage.fonts = true;
             }
@@ -298,6 +384,7 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
     <link rel="stylesheet" href="assets/css/kaiadmin.min.css">
     <link rel="stylesheet" href="assets/css/demo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         .order-details-table { width: 100%; border-collapse: collapse; }
         .order-details-table th, .order-details-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
@@ -336,7 +423,14 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title"><?php echo $show_form ? 'Chi Tiết Đơn Hàng #' . $order['id'] : 'Danh Sách Đơn Hàng'; ?></h4>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h4 class="card-title"><?php echo $show_form ? 'Chi Tiết Đơn Hàng #' . $order['id'] : 'Danh Sách Đơn Hàng'; ?></h4>
+                                        <?php if (!$show_form): ?>
+                                            <a href="?export_excel=1" class="btn btn-success btn-sm">
+                                                <i class="fas fa-file-excel"></i> Xuất Excel
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <?php if ($show_form): ?>
@@ -414,8 +508,8 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
                                                                 <td><?php echo htmlspecialchars($order['phone']); ?></td>
                                                                 <td><?php echo number_format($order['total'], 0); ?> đ</td>
                                                                 <td><?php echo htmlspecialchars($order['payment_method_label']); ?></td>
-                                                                <form method="POST" action="orders.php">
-                                                                    <td>
+                                                                <td>
+                                                                    <form method="POST" action="orders.php">
                                                                         <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
                                                                         <input type="hidden" name="toggle_status" value="1">
                                                                         <select name="status" class="form-control toggle-status" onchange="this.form.submit()">
@@ -451,7 +545,6 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
                 </div>
             </div>
             <?php include 'include/footer.php'; ?>
-        <?php include 'include/custom-template.php'; ?>
         </div>
     </div>
 
@@ -469,8 +562,8 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
     <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
     <script src="assets/js/kaiadmin.min.js"></script>
     <script src="assets/js/setting-demo.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">    <!-- iZitoast JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script>
 $(document).ready(function() {
@@ -493,7 +586,6 @@ $(document).ready(function() {
     $('.delete-order').on('click', function(e) {
         e.preventDefault();
         var href = $(this).attr('href');
-        console.log('Delete href:', href); // Debug href
         Swal.fire({
             title: 'Bạn có chắc chắn?',
             text: 'Đặt hàng sẽ bị xóa vĩnh viễn!',
@@ -505,7 +597,6 @@ $(document).ready(function() {
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('Confirmed, redirecting to:', href); // Debug chuyển hướng
                 window.location.href = href;
             }
         });
@@ -515,7 +606,6 @@ $(document).ready(function() {
     $('.send-email').on('click', function(e) {
         e.preventDefault();
         var href = $(this).attr('href');
-        console.log('Send email href:', href); // Debug href
         Swal.fire({
             title: 'Xác nhận gửi email?',
             text: 'Thông tin đơn hàng sẽ được gửi đến khách hàng!',
@@ -527,13 +617,12 @@ $(document).ready(function() {
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('Confirmed, redirecting to:', href); // Debug chuyển hướng
                 window.location.href = href;
             }
         });
     });
 });
-</script>
+    </script>
     <?php ob_end_flush(); ?>
 </body>
 </html>

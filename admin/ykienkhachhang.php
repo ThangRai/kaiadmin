@@ -207,7 +207,7 @@ $modules = getModules($pdo);
     <link rel="stylesheet" href="assets/css/demo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css" />
-    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <script src="ckeditor/ckeditor.js"></script>
     <style>
         .form-group label { font-weight: 500; }
         .card-header { background-color: #f8f9fa; }

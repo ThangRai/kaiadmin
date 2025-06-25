@@ -355,7 +355,7 @@ function calculate_seo_score($title, $description, $keywords) {
     <!-- Bootstrap Switch CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
     <!-- CKEditor -->
-    <script src="https://cdn.ckeditor.com/4.22.0/standard/ckeditor.js"></script>
+    <script src="ckeditor/ckeditor.js"></script>
     <style>
         .add-btn {
             position: absolute;

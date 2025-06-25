@@ -3,6 +3,16 @@ ob_start();
 session_start();
 require 'database/config.php';
 require_once 'include/functions.php';
+require '../vendor/autoload.php';
+require 'vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 // Check login
 if (!isset($_SESSION['user_id'])) {
@@ -144,6 +154,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add_user']) || isset
         $_SESSION['toast_type'] = 'error';
     }
     header("Location: quantri.php");
+    exit;
+}
+// Handle send email
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_email'])) {
+    try {
+        $selected_users = isset($_POST['selected_users']) ? $_POST['selected_users'] : [];
+        $subject = $_POST['subject'];
+        $content = $_POST['content'];
+
+        if (empty($selected_users)) {
+            throw new Exception("Vui lòng chọn ít nhất một người nhận!");
+        }
+
+        if (empty($subject) || empty($content)) {
+            throw new Exception("Tiêu đề và nội dung email không được để trống!");
+        }
+
+        // Initialize PHPMailer
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'badaotulong123@gmail.com'; // Thay bằng email của bạn
+        $mail->Password = 'nihu fluz qcla wgmh'; // Thay bằng mật khẩu ứng dụng
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->CharSet = 'UTF-8';
+        $mail->setFrom('badaotulong123@gmail.com', 'Kaiadmin');
+        $mail->isHTML(true);
+
+        // Fetch selected users' emails
+        $stmt = $pdo->prepare("SELECT email, fullname FROM users WHERE id IN (" . implode(',', array_fill(0, count($selected_users), '?')) . ")");
+        $stmt->execute($selected_users);
+        $recipients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($recipients as $recipient) {
+            $mail->addAddress($recipient['email'], $recipient['fullname']);
+        }
+
+        $mail->Subject = $subject;
+        $mail->Body = nl2br($content);
+
+        $mail->send();
+        $_SESSION['toast_message'] = 'Gửi email thành công!';
+        $_SESSION['toast_type'] = 'success';
+    } catch (Exception $e) {
+        log_debug('Email error: ' . $e->getMessage() . ' at line ' . $e->getLine());
+        $_SESSION['toast_message'] = 'Lỗi gửi email: ' . $e->getMessage();
+        $_SESSION['toast_type'] = 'error';
+    }
+    header("Location: quantri.php?active=mail");
     exit;
 }
 
@@ -390,6 +451,54 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                                 </div>
                             </div>
                         <?php else: ?>
+                            <?php if ($active === 'mail'): ?>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Gửi Email</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="form-group">
+                        <label>Chọn người nhận</label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="select-all"></th>
+                                        <th>Họ tên</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($users as $user): ?>
+                                        <tr>
+                                            <td><input type="checkbox" name="selected_users[]" value="<?php echo $user['id']; ?>" class="user-checkbox"></td>
+                                            <td><?php echo htmlspecialchars($user['fullname']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input type="text" name="subject" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nội dung</label>
+                        <textarea name="content" class="form-control" rows="5" required></textarea>
+                    </div>
+                    <div class="form-header d-flex justify-content-end">
+                        <button type="submit" name="send_email" class="btn btn-primary">Gửi</button>
+                        <a href="quantri.php" class="btn btn-secondary ml-2">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
                             <!-- Account List -->
                             <div class="col-md-12">
                                 <div class="card">
@@ -397,7 +506,10 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                                         <h4 class="card-title">Danh sách tài khoản</h4>
                                     </div>
                                     <div class="card-body">
-                                        <a href="?active=add" class="btn btn-primary add-btn">Thêm tài khoản</a>
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <a href="?active=add" class="btn btn-primary mr-2">Thêm tài khoản</a>
+                                            <a href="?active=mail" class="btn btn-info">Gửi mail</a>
+                                        </div>
                                         <div class="table-responsive">
                                             <table class="table table-hover">
                                                 <thead>
@@ -470,6 +582,23 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <!-- Bootstrap Switch JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/js/bootstrap-switch.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Select/Deselect all checkboxes
+        $('#select-all').on('change', function() {
+            $('.user-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        // Update select-all checkbox based on individual checkboxes
+        $('.user-checkbox').on('change', function() {
+            if ($('.user-checkbox:checked').length === $('.user-checkbox').length) {
+                $('#select-all').prop('checked', true);
+            } else {
+                $('#select-all').prop('checked', false);
+            }
+        });
+    });
+</script>
     <script>
         $(document).ready(function() {
             // iZitoast notification

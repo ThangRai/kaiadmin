@@ -1,0 +1,5 @@
+.page-content { background-color: #f8f9fa; padding: 30px; }
+.page-content h1 { color: #6c757d; }
+.search-result-item { background: #fff; border: 5px solid #ddd; padding: 10px; margin-bottom: 10px;
+ border-radius: 10px; }
+.search-result-item img { max-width: 100px; margin-bottom: 10px; }

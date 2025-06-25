@@ -3,6 +3,16 @@ ob_start();
 session_start();
 require 'database/config.php';
 require_once 'include/functions.php';
+require '../vendor/autoload.php';
+require 'vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 // Kiểm tra đăng nhập và quyền admin
 // if (!isset($_SESSION['user_id']) || !is_admin()) {
@@ -51,6 +61,80 @@ try {
     $_SESSION['error_message'] = 'Lỗi tải dữ liệu lịch sử đăng nhập!';
     $_SESSION['error_type'] = 'error';
 }
+// Handle export Excel
+if (isset($_GET['export']) && $_GET['export'] === 'excel') {
+    try {
+        // Lấy tất cả dữ liệu (không phân trang)
+        $query = "SELECT ul.id, ul.userId, ul.username, ul.userIp, ul.login_time, ul.status, u.username AS user_name
+                  FROM userlog ul
+                  LEFT JOIN users u ON ul.userId = u.id
+                  WHERE 1=1";
+        $params = [];
+
+        if (!empty($search)) {
+            $query .= " AND (ul.username LIKE :search OR ul.userIp LIKE :search)";
+            $params[':search'] = '%' . $search . '%';
+        }
+
+        $query .= " ORDER BY ul.login_time DESC";
+        $stmt = $pdo->prepare($query);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->execute();
+        $all_records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Tạo spreadsheet mới
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Lịch Sử Đăng Nhập');
+
+        // Định dạng tiêu đề
+        $headers = ['ID', 'Tên người dùng', 'IP', 'Thời gian đăng nhập', 'Trạng thái'];
+        $col = 'A';
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . '1', $header);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $sheet->getStyle($col . '1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle($col . '1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFCCCCCC');
+            $col++;
+        }
+
+        // Thêm dữ liệu
+        $row = 2;
+        foreach ($all_records as $record) {
+            $sheet->setCellValue('A' . $row, $record['id']);
+            $sheet->setCellValue('B' . $row, $record['username']);
+            $sheet->setCellValue('C' . $row, $record['userIp']);
+            $sheet->setCellValue('D' . $row, date('d/m/Y H:i:s', strtotime($record['login_time'])));
+            $sheet->setCellValue('E' . $row, $record['status'] == 'success' ? 'Thành công' : 'Thất bại');
+            $row++;
+        }
+
+        // Định dạng cột
+        foreach (range('A', 'E') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+            $sheet->getStyle($col . '1:' . $col . ($row - 1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+        }
+
+        // Xuất file
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'LichSuDangNhap_' . date('Ymd_His') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    } catch (Exception $e) {
+        log_debug('Export Excel error: ' . $e->getMessage() . ' at line ' . $e->getLine());
+        $_SESSION['error_message'] = 'Lỗi xuất file Excel: ' . $e->getMessage();
+        $_SESSION['error_type'] = 'error';
+        header("Location: loginhistory.php");
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -60,6 +144,8 @@ try {
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
     <title>Lịch Sử Đăng Nhập - Kaiadmin</title>
     <link rel="icon" href="assets/img/kaiadmin/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <!-- Fonts and icons -->
     <script src="assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -102,12 +188,15 @@ try {
                                     <div class="card-head-row">
                                         <div class="card-title">Danh Sách Lịch Sử Đăng Nhập</div>
                                         <div class="card-tools">
-                                            <form method="GET" action="">
-                                                <div class="input-group">
-                                                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm theo tên hoặc IP" value="<?php echo htmlspecialchars($search); ?>">
-                                                    <button class="btn btn-primary btn-sm" type="submit">Tìm</button>
-                                                </div>
-                                            </form>
+                                            <div class="d-flex align-items-center">
+                                                <form method="GET" action="" class="mr-2">
+                                                    <div class="input-group">
+                                                        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm theo tên hoặc IP" value="<?php echo htmlspecialchars($search); ?>">
+                                                        <button class="btn btn-primary btn-sm" type="submit">Tìm</button>
+                                                    </div>
+                                                </form>
+                                                <a href="?export=excel<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="btn btn-success btn-sm"style="padding: 10px;margin-left: 10px;"><i class="fa-solid fa-file-excel"></i> Xuất Excel</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

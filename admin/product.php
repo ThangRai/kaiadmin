@@ -322,7 +322,7 @@ function calculate_seo_score($title, $description, $keywords) {
     <!-- Bootstrap Switch CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
     <!-- CKEditor -->
-    <script src="https://cdn.ckeditor.com/4.22.0/standard/ckeditor.js"></script>
+    <script src="ckeditor/ckeditor.js"></script>
     <style>
         .col-md-2 {
     padding: unset !important;
@@ -449,7 +449,7 @@ function calculate_seo_score($title, $description, $keywords) {
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="category_ids">Danh mục</label>
-                                                        <select id="category_ids" name="category_ids[]" class="form-control" multiple>
+                                                        <select id="category_ids" name="category_ids[]" class="form-control">
                                                             <?php foreach ($categories as $category): ?>
                                                                 <option value="<?php echo $category['id']; ?>" <?php echo in_array($category['id'], $edit_category_ids) ? 'selected' : ''; ?>>
                                                                     <?php echo htmlspecialchars($category['title_vi']); ?>

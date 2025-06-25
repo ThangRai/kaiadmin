@@ -1,0 +1,4 @@
+.page-content { background-color: #fff3e0; padding: 30px; }
+.page-content h1 { color: #ff9800; }
+.products-item { background: #fff; border: 2px solid #ff9800; padding: 15px; border-radius: 8px; }
+.products-item:hover { transform: scale(1.05); transition: transform 0.2s; }
