@@ -512,9 +512,14 @@ function calculate_seo_score($title, $description, $keywords) {
                                     <div class="card-body">
                                         <form method="POST" enctype="multipart/form-data">
                                             <div class="form-header d-flex justify-content-end">
-                                                <button type="submit" name="<?php echo $edit_category ? 'edit_category' : 'add_category'; ?>" class="btn btn-primary">Lưu</button>
-                                                <a href="categories.php" class="btn btn-secondary ml-2">Hủy</a>
+                                                <button type="submit" name="<?php echo $edit_category ? 'edit_category' : 'add_category'; ?>" class="btn btn-primary">
+                                                    <i class="fas fa-save"></i> Lưu
+                                                </button>
+                                                <a href="categories.php" class="btn btn-secondary ml-2">
+                                                    <i class="fas fa-times"></i> Hủy
+                                                </a>
                                             </div>
+
                                             <div class="row">
                                                 <!-- Left Column (3/12) -->
                                                 <div class="col-md-3">
@@ -660,7 +665,9 @@ function calculate_seo_score($title, $description, $keywords) {
                                         <h4 class="card-title">Danh sách Danh mục</h4>
                                     </div>
                                     <div class="card-body">
-                                        <a href="?method=frm" class="btn btn-primary add-btn">Thêm Danh mục</a>
+                                        <a href="?method=frm" class="btn btn-primary add-btn">
+                                            <i class="fas fa-plus"></i> Thêm Danh mục
+                                        </a>
                                         <!-- Filter Form -->
                                         <form method="GET" class="mb-4">
                                             <div class="row">
@@ -698,9 +705,14 @@ function calculate_seo_score($title, $description, $keywords) {
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group mt-4">
-                                                        <button type="submit" class="btn btn-primary">Tìm</button>
-                                                        <a href="categories.php" class="btn btn-secondary">Reset</a>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="fas fa-search"></i> Tìm
+                                                        </button>
+                                                        <a href="categories.php" class="btn btn-secondary">
+                                                            <i class="fas fa-sync-alt"></i> Reset
+                                                        </a>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </form>
@@ -759,9 +771,14 @@ function calculate_seo_score($title, $description, $keywords) {
             </form>
         </td>
         <td>
-            <a href="?method=frm&edit_id=<?php echo $category['id']; ?>" class="btn btn-sm btn-warning">Sửa</a>
-            <a href="?delete_id=<?php echo $category['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+            <a href="?method=frm&edit_id=<?php echo $category['id']; ?>" class="btn btn-sm btn-warning">
+                <i class="fas fa-edit"></i> Sửa
+            </a>
+            <a href="?delete_id=<?php echo $category['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                <i class="fas fa-trash-alt"></i> Xóa
+            </a>
         </td>
+
         <td>
             <div class="display-position-list">
                 <?php if ($category['display_position']): ?>

@@ -244,9 +244,14 @@ $modules = getModules($pdo);
                                 <div class="card-body">
                                     <?php if (isset($_GET['method']) && $_GET['method'] === 'frm'): ?>
                                         <div class="form-actions">
-                                            <button type="submit" form="feedbackForm" class="btn btn-primary"><?php echo $edit_feedback ? 'Cập nhật' : 'Lưu'; ?></button>
-                                            <a href="ykienkhachhang.php" class="btn btn-secondary">Hủy</a>
+                                            <button type="submit" form="feedbackForm" class="btn btn-primary">
+                                                <i class="fas fa-save"></i> <?php echo $edit_feedback ? 'Cập nhật' : 'Lưu'; ?>
+                                            </button>
+                                            <a href="ykienkhachhang.php" class="btn btn-secondary">
+                                                <i class="fas fa-times"></i> Hủy
+                                            </a>
                                         </div>
+
                                         <form id="feedbackForm" method="POST" action="ykienkhachhang.php" enctype="multipart/form-data">
                                             <?php if ($edit_feedback): ?>
                                                 <input type="hidden" name="id" value="<?php echo $edit_feedback['id']; ?>">
@@ -294,7 +299,9 @@ $modules = getModules($pdo);
                                             CKEDITOR.replace('content');
                                         </script>
                                     <?php else: ?>
-                                        <a href="ykienkhachhang.php?method=frm" class="btn btn-primary add-btn">Thêm Ý kiến</a>
+                                        <a href="ykienkhachhang.php?method=frm" class="btn btn-primary add-btn">
+                                            <i class="fas fa-plus"></i> Thêm Ý kiến
+                                        </a>
                                         <div class="table-responsive">
                                             <table class="table table-hover">
                                                 <thead>
@@ -319,7 +326,7 @@ $modules = getModules($pdo);
                                                                     Không có
                                                                 <?php endif; ?>
                                                             </td>
-                                                            <td><?php echo htmlspecialchars($feedback['content'] ?? 'Không có'); ?></td>
+                                                            <td><?php echo ($feedback['content'] ?? 'Không có'); ?></td>
                                                             <td>
                                                                 <a href="?toggle_id=<?php echo $feedback['id']; ?>" class="status-toggle">
                                                                     <span class="badge badge-<?php echo $feedback['is_active'] ? 'success' : 'danger'; ?>">
@@ -328,10 +335,17 @@ $modules = getModules($pdo);
                                                                 </a>
                                                             </td>
                                                             <td>
-                                                                <a href="ykienkhachhang.php?method=frm&edit_id=<?php echo $feedback['id']; ?>" class="btn btn-sm btn-primary">Sửa</a>
-                                                                <a href="?copy_id=<?php echo $feedback['id']; ?>" class="btn btn-sm btn-info">Chép</a>
-                                                                <a href="?delete_id=<?php echo $feedback['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa ý kiến này?')">Xóa</a>
+                                                                <a href="ykienkhachhang.php?method=frm&edit_id=<?php echo $feedback['id']; ?>" class="btn btn-sm btn-primary" title="Sửa">
+                                                                    <i class="fas fa-edit"></i> Sửa
+                                                                </a>
+                                                                <a href="?copy_id=<?php echo $feedback['id']; ?>" class="btn btn-sm btn-info" title="Chép">
+                                                                    <i class="fas fa-copy"></i> Sao chép
+                                                                </a>
+                                                                <a href="?delete_id=<?php echo $feedback['id']; ?>" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa ý kiến này?')">
+                                                                    <i class="fas fa-trash-alt"></i> Xoá
+                                                                </a>
                                                             </td>
+
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
@@ -349,6 +363,7 @@ $modules = getModules($pdo);
 
         </div>
     </div>
+
 
     <script src="assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="assets/js/core/popper.min.js"></script>

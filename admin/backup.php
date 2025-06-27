@@ -224,9 +224,14 @@ usort($backup_files, function($a, $b) use ($backup_dir) {
                                                         <td><?php echo date('d/m/Y H:i:s', filemtime($backup_dir . $file)); ?></td>
                                                         <td class="file-size"><?php echo round(filesize($backup_dir . $file) / 1024, 2); ?> KB</td>
                                                         <td class="action-btns">
-                                                            <a href="backups/<?php echo urlencode($file); ?>" class="btn btn-sm btn-success" download>Tải về</a>
-                                                            <a href="backup.php?delete=<?php echo urlencode($file); ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa file này?')">Xóa</a>
+                                                            <a href="backups/<?php echo urlencode($file); ?>" class="btn btn-sm btn-success" download title="Tải về">
+                                                                <i class="fas fa-download"></i> Tải về
+                                                            </a>
+                                                            <a href="backup.php?delete=<?php echo urlencode($file); ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa file này?')" title="Xóa">
+                                                                <i class="fas fa-trash-alt"></i> Xoá
+                                                            </a>
                                                         </td>
+
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -257,9 +262,9 @@ usort($backup_files, function($a, $b) use ($backup_dir) {
         $(document).ready(function() {
             // Khởi tạo DataTable
             $('table').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Vietnamese.json"
-                }
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+            },
             });
 
             // iZitoast notification

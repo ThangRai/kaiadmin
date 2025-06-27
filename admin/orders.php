@@ -115,8 +115,8 @@ if (isset($_GET['send_email']) && isset($_GET['order_id'])) {
                     $mail->isSMTP();
                     $mail->Host = 'smtp.gmail.com';
                     $mail->SMTPAuth = true;
-                    $mail->Username = 'badaotulong123@gmail.com'; // Thay bằng email của bạn
-                    $mail->Password = 'nihu fluz qcla wgmh'; // Thay bằng mật khẩu ứng dụng
+                    $mail->Username = 'badaotulong123@gmail.com';
+                    $mail->Password = 'nihu fluz qcla wgmh';
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                     $mail->Port = 587;
                     $mail->CharSet = 'UTF-8';
@@ -201,7 +201,7 @@ if (isset($_GET['delete_id'])) {
             $pdo->rollBack();
             $error_message = 'Delete error: ' . $e->getMessage() . ' at line ' . $e->getLine();
             log_debug($error_message);
-            error_log($error_message); // Ghi vào tệp nhật ký PHP
+            error_log($error_message);
             $_SESSION['toast_message'] = $error_message;
             $_SESSION['toast_type'] = 'error';
         }
@@ -394,6 +394,7 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
         .form-group label { font-weight: 500; }
         .table th, .table td { vertical-align: middle; }
         .card-body .form-group p { margin-bottom: 0.5rem; }
+        .print-content { display: none; }
     </style>
 </head>
 <body>
@@ -425,7 +426,13 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
                                 <div class="card-header">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h4 class="card-title"><?php echo $show_form ? 'Chi Tiết Đơn Hàng #' . $order['id'] : 'Danh Sách Đơn Hàng'; ?></h4>
-                                        <?php if (!$show_form): ?>
+                                        <?php if ($show_form): ?>
+                                            <div>
+                                                <button class="btn btn-success btn-sm print-order" data-order-id="<?php echo $order['id']; ?>">
+                                                    <i class="fas fa-print"></i> In đơn hàng
+                                                </button>
+                                            </div>
+                                        <?php else: ?>
                                             <a href="?export_excel=1" class="btn btn-success btn-sm">
                                                 <i class="fas fa-file-excel"></i> Xuất Excel
                                             </a>
@@ -478,7 +485,40 @@ if (isset($_GET['method']) && $_GET['method'] === 'frm' && isset($_GET['order_id
                                             </table>
                                         </div>
                                         <div class="form-group text-right">
-                                            <a href="orders.php" class="btn btn-secondary">Quay lại</a>
+                                            <a href="orders.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</a>
+                                        </div>
+                                        <!-- Nội dung in ẩn -->
+                                        <div class="print-content" id="print-content-<?php echo $order['id']; ?>">
+                                            <h2>Thông tin đơn hàng #<?php echo $order['id']; ?></h2>
+                                            <h3>Thông tin khách hàng</h3>
+                                            <p><strong>Tên:</strong> <?php echo htmlspecialchars($order['customer_name']); ?></p>
+                                            <p><strong>Số điện thoại:</strong> <?php echo htmlspecialchars($order['phone']); ?></p>
+                                            <p><strong>Email:</strong> <?php echo htmlspecialchars($order['email'] ?: 'N/A'); ?></p>
+                                            <p><strong>Địa chỉ:</strong> <?php echo htmlspecialchars($order['address']); ?>, 
+                                                <?php echo htmlspecialchars($order['ward']); ?>, 
+                                                <?php echo htmlspecialchars($order['district']); ?>, 
+                                                <?php echo htmlspecialchars($order['province']); ?></p>
+                                            <p><strong>Trạng thái:</strong> <?php echo getStatusLabel($order['status']); ?></p>
+                                            <p><strong>Tổng tiền:</strong> <?php echo number_format($order['total'], 0); ?> đ</p>
+                                            <p><strong>Phương thức thanh toán:</strong> <?php echo htmlspecialchars($order['payment_method_label']); ?></p>
+                                            <h3>Chi tiết đơn hàng</h3>
+                                            <table style="border-collapse: collapse; width: 100%;">
+                                                <tr style="background-color: #f2f2f2;">
+                                                    <th style="border: 1px solid #ddd; padding: 8px;">Sản phẩm</th>
+                                                    <th style="border: 1px solid #ddd; padding: 8px;">Giá</th>
+                                                    <th style="border: 1px solid #ddd; padding: 8px;">Số lượng</th>
+                                                    <th style="border: 1px solid #ddd; padding: 8px;">Tổng</th>
+                                                </tr>
+                                                <?php foreach ($order_details as $item): ?>
+                                                    <tr>
+                                                        <td style="border: 1px solid #ddd; padding: 8px;"><?php echo htmlspecialchars($item['title']); ?></td>
+                                                        <td style="border: 1px solid #ddd; padding: 8px;"><?php echo number_format($item['price'], 0); ?> đ</td>
+                                                        <td style="border: 1px solid #ddd; padding: 8px;"><?php echo htmlspecialchars($item['quantity']); ?></td>
+                                                        <td style="border: 1px solid #ddd; padding: 8px;"><?php echo number_format($item['price'] * $item['quantity'], 0); ?> đ</td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </table>
+                                            <p><strong>Ghi chú:</strong> <?php echo htmlspecialchars($order['note'] ?: 'N/A'); ?></p>
                                         </div>
                                     <?php else: ?>
                                         <div class="table-responsive">
@@ -620,6 +660,60 @@ $(document).ready(function() {
                 window.location.href = href;
             }
         });
+    });
+
+    // Xử lý nút In đơn hàng
+    $('.print-order').on('click', function() {
+        iziToast.info({
+            title: 'Thông báo',
+            message: 'Đang mở cửa sổ in...',
+            position: 'topRight'
+        });
+        var orderId = $(this).data('order-id');
+        var $printContent = $('#print-content-' + orderId);
+        if ($printContent.length === 0) {
+            iziToast.error({
+                title: 'Lỗi',
+                message: 'Không tìm thấy nội dung in!',
+                position: 'topRight'
+            });
+            return;
+        }
+        var printContent = $printContent.html();
+        var printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            iziToast.error({
+                title: 'Lỗi',
+                message: 'Trình duyệt đã chặn cửa sổ in. Vui lòng cho phép popup!',
+                position: 'topRight'
+            });
+            return;
+        }
+        printWindow.document.write(`
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>In đơn hàng #${orderId}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    table { border-collapse: collapse; width: 100%; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                    th { background-color: #f2f2f2; }
+                    h2, h3 { color: #333; }
+                    p { margin: 5px 0; }
+                </style>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
     });
 });
     </script>

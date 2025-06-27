@@ -29,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_general'])) {
     $website_status = isset($_POST['website_status']) ? 1 : 0;
     $scroll_top = isset($_POST['scroll_top']) ? 1 : 0;
     $lock_copy = isset($_POST['lock_copy']) ? 1 : 0;
+    $website_name = $_POST['website_name'] ?? '';
+    $slogan = $_POST['slogan'] ?? '';
+    $description = $_POST['description'] ?? '';
 
     // Upload favicon
     $favicon = getSetting($pdo, 'favicon');
@@ -44,10 +47,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_general'])) {
         }
     }
 
+    // Upload ảnh đại diện
+    $og_image = getSetting($pdo, 'og_image');
+    if (!empty($_FILES['og_image']['name'])) {
+        $upload_dir = 'uploads/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        $og_image_name = time() . '_' . basename($_FILES['og_image']['name']);
+        $og_image_path = $upload_dir . $og_image_name;
+        if (move_uploaded_file($_FILES['og_image']['tmp_name'], $og_image_path)) {
+            $og_image = '/kai/admin/uploads/' . $og_image_name;
+        }
+    }
+
     saveSetting($pdo, 'website_status', $website_status);
     saveSetting($pdo, 'favicon', $favicon);
     saveSetting($pdo, 'scroll_top', $scroll_top);
     saveSetting($pdo, 'lock_copy', $lock_copy);
+    saveSetting($pdo, 'website_name', $website_name);
+    saveSetting($pdo, 'slogan', $slogan);
+    saveSetting($pdo, 'description', $description);
+    saveSetting($pdo, 'og_image', $og_image);
 
     $_SESSION['toast_message'] = 'Cập nhật cấu hình tổng quan thành công!';
     $_SESSION['toast_type'] = 'success';
@@ -252,16 +273,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_shipping'])) {
     exit;
 }
 
+// Xử lý form Thanh toán
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_payment'])) {
+    $payment_config = [
+        'cod' => isset($_POST['cod_enabled']) ? 1 : 0,
+        'bank_transfer' => [
+            'enabled' => isset($_POST['bank_transfer_enabled']) ? 1 : 0,
+            'bank_name' => $_POST['bank_name'] ?? '',
+            'account_number' => $_POST['account_number'] ?? '',
+            'account_holder' => $_POST['account_holder'] ?? '',
+            'transfer_content' => $_POST['transfer_content'] ?? '',
+        ]
+    ];
+
+    // Upload mã QR
+    $qr_code = getSetting($pdo, 'bank_transfer_qr_code');
+    if (!empty($_FILES['qr_code']['name'])) {
+        $upload_dir = 'uploads/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        $qr_code_name = time() . '_' . basename($_FILES['qr_code']['name']);
+        $qr_code_path = $upload_dir . $qr_code_name;
+        if (move_uploaded_file($_FILES['qr_code']['tmp_name'], $qr_code_path)) {
+            $qr_code = '/kai/admin/uploads/' . $qr_code_name;
+        }
+    }
+
+    saveSetting($pdo, 'payment_config', json_encode($payment_config));
+    saveSetting($pdo, 'bank_transfer_qr_code', $qr_code);
+
+    $_SESSION['toast_message'] = 'Cập nhật cấu hình thanh toán thành công!';
+    $_SESSION['toast_type'] = 'success';
+    header("Location: cauhinh.php?tab=payment");
+    exit;
+}
+
+// Xử lý form Cấu trúc dữ liệu
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_brand_data'])) {
+    $brand_name = $_POST['brand_name'] ?? '';
+    $address_json = trim($_POST['address_json']);
+    $created_at = date('Y-m-d H:i:s');
+
+    // Xử lý upload logo
+    $logo = getSetting($pdo, 'brand_data') ? json_decode(getSetting($pdo, 'brand_data'), true)['logo'] ?? '' : '';
+    if (!empty($_FILES['logo']['name'])) {
+        $upload_dir = 'uploads/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        $logo_name = time() . '_' . basename($_FILES['logo']['name']);
+        $logo_path = $upload_dir . $logo_name;
+        if (move_uploaded_file($_FILES['logo']['tmp_name'], $logo_path)) {
+            $logo = '/kai/admin/uploads/' . $logo_name;
+        }
+    }
+
+    // Chuẩn bị dữ liệu JSON
+    $brand_data = [
+        'brand_name' => $brand_name,
+        'logo' => $logo,
+        'address_json' => $address_json,
+        'created_at' => $created_at
+    ];
+    saveSetting($pdo, 'brand_data', json_encode($brand_data));
+
+    $_SESSION['toast_message'] = 'Cập nhật cấu trúc dữ liệu thành công!';
+    $_SESSION['toast_type'] = 'success';
+    header("Location: cauhinh.php?tab=brand_data");
+    exit;
+}
+
 // Lấy dữ liệu
 $website_status = getSetting($pdo, 'website_status', '1');
 $favicon = getSetting($pdo, 'favicon');
 $scroll_top = getSetting($pdo, 'scroll_top', '1');
 $lock_copy = getSetting($pdo, 'lock_copy', '0');
+$website_name = getSetting($pdo, 'website_name', '');
+$slogan = getSetting($pdo, 'slogan', '');
+$description = getSetting($pdo, 'description', '');
+$og_image = getSetting($pdo, 'og_image', '');
 $smtp = json_decode(getSetting($pdo, 'smtp', '{}'), true);
 $colors = json_decode(getSetting($pdo, 'colors', '{}'), true);
 $fonts = json_decode(getSetting($pdo, 'fonts', '{}'), true);
 $embed_codes = json_decode(getSetting($pdo, 'embed_codes', '{}'), true);
 $shipping_config = json_decode(getSetting($pdo, 'shipping_config', '{}'), true);
+$payment_config = json_decode(getSetting($pdo, 'payment_config', '{}'), true);
+$bank_transfer_qr_code = getSetting($pdo, 'bank_transfer_qr_code', '');
+$brand_data = json_decode(getSetting($pdo, 'brand_data', '{}'), true);
+$brand_name = $brand_data['brand_name'] ?? '';
+$logo = $brand_data['logo'] ?? '';
+$address_json = $brand_data['address_json'] ?? '';
+$created_at = $brand_data['created_at'] ?? date('Y-m-d H:i:s', strtotime('2025-06-26 13:47:00 +07:00'));
 
 // Lấy danh sách liên hệ
 $stmt = $pdo->query("SELECT * FROM contact_info ORDER BY id DESC");
@@ -310,7 +413,7 @@ $current_tab = $_GET['tab'] ?? 'general';
             border-top: none;
             border-radius: 0 0 4px 4px;
         }
-        .contact-image {
+        .contact-image, .og-image, .qr-image {
             max-width: 70px;
             height: auto;
         }
@@ -390,33 +493,86 @@ $current_tab = $_GET['tab'] ?? 'general';
                                 <div class="card-body">
                                     <ul class="nav nav-tabs" id="configTabs">
                                         <li class="nav-item">
-                                            <a class="nav-link <?php echo $current_tab === 'general' ? 'active' : ''; ?>" id="general-tab" data-toggle="tab" href="#general">Tổng quan</a>
+                                            <a class="nav-link <?php echo $current_tab === 'general' ? 'active' : ''; ?>" id="general-tab" data-toggle="tab" href="#general">
+                                                <i class="fas fa-cog"></i> Tổng quan
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link <?php echo $current_tab === 'contact' ? 'active' : ''; ?>" id="contact-tab" data-toggle="tab" href="#contact">Thông tin liên hệ</a>
+                                            <a class="nav-link <?php echo $current_tab === 'contact' ? 'active' : ''; ?>" id="contact-tab" data-toggle="tab" href="#contact">
+                                                <i class="fas fa-address-card"></i> Thông tin liên hệ
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link <?php echo $current_tab === 'email' ? 'active' : ''; ?>" id="email-tab" data-toggle="tab" href="#email">Email</a>
+                                            <a class="nav-link <?php echo $current_tab === 'email' ? 'active' : ''; ?>" id="email-tab" data-toggle="tab" href="#email">
+                                                <i class="fas fa-envelope"></i> Email
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link <?php echo $current_tab === 'colors' ? 'active' : ''; ?>" id="colors-tab" data-toggle="tab" href="#colors">Màu sắc</a>
+                                            <a class="nav-link <?php echo $current_tab === 'colors' ? 'active' : ''; ?>" id="colors-tab" data-toggle="tab" href="#colors">
+                                                <i class="fas fa-palette"></i> Màu sắc
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link <?php echo $current_tab === 'fonts' ? 'active' : ''; ?>" id="fonts-tab" data-toggle="tab" href="#fonts">Phông chữ</a>
+                                            <a class="nav-link <?php echo $current_tab === 'fonts' ? 'active' : ''; ?>" id="fonts-tab" data-toggle="tab" href="#fonts">
+                                                <i class="fas fa-font"></i> Phông chữ
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link <?php echo $current_tab === 'embed' ? 'active' : ''; ?>" id="embed-tab" data-toggle="tab" href="#embed">Mã nhúng</a>
+                                            <a class="nav-link <?php echo $current_tab === 'embed' ? 'active' : ''; ?>" id="embed-tab" data-toggle="tab" href="#embed">
+                                                <i class="fas fa-code"></i> Mã nhúng
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link <?php echo $current_tab === 'shipping' ? 'active' : ''; ?>" id="shipping-tab" data-toggle="tab" href="#shipping">Vận chuyển</a>
+                                            <a class="nav-link <?php echo $current_tab === 'shipping' ? 'active' : ''; ?>" id="shipping-tab" data-toggle="tab" href="#shipping">
+                                                <i class="fas fa-truck"></i> Vận chuyển
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link <?php echo $current_tab === 'payment' ? 'active' : ''; ?>" id="payment-tab" data-toggle="tab" href="#payment">
+                                                <i class="fas fa-credit-card"></i> Thanh toán
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link <?php echo $current_tab === 'brand_data' ? 'active' : ''; ?>" id="brand-data-tab" data-toggle="tab" href="#brand_data">
+                                                <i class="fas fa-database"></i> Cấu trúc dữ liệu
+                                            </a>
                                         </li>
                                     </ul>
+
                                     <div class="tab-content" id="configTabsContent">
                                         <!-- Tab Tổng quan -->
                                         <div class="tab-pane fade <?php echo $current_tab === 'general' ? 'show active' : ''; ?>" id="general">
                                             <form method="POST" enctype="multipart/form-data">
                                                 <div class="form-header d-flex justify-content-end">
-                                                    <button type="submit" name="save_general" class="btn btn-primary">Lưu</button>
+                                                    <button type="submit" name="save_general" class="btn btn-primary">
+                                                        <i class="fas fa-save"></i> Lưu
+                                                    </button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Tên Website</label>
+                                                    <input type="text" name="website_name" class="form-control" value="<?php echo htmlspecialchars($website_name); ?>" placeholder="Nhập tên website">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Slogan</label>
+                                                    <input type="text" name="slogan" class="form-control" value="<?php echo htmlspecialchars($slogan); ?>" placeholder="Nhập slogan">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Mô tả Website</label>
+                                                    <textarea name="description" class="form-control" rows="4" placeholder="Nhập mô tả website"><?php echo htmlspecialchars($description); ?></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Ảnh đại diện (OG Image)</label>
+                                                    <input type="file" name="og_image" class="form-control" accept="image/*">
+                                                    <?php if ($og_image): ?>
+                                                        <img src="<?php echo htmlspecialchars($og_image); ?>" alt="OG Image" class="og-image mt-2">
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Favicon Website</label>
+                                                    <input type="file" name="favicon" class="form-control" accept="image/*">
+                                                    <?php if ($favicon): ?>
+                                                        <img src="<?php echo htmlspecialchars($favicon); ?>" alt="Favicon" class="mt-2" style="max-width: 50px;">
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Bật/Tắt Website</label>
@@ -424,13 +580,6 @@ $current_tab = $_GET['tab'] ?? 'general';
                                                         <input type="checkbox" name="website_status" class="form-check-input" <?php echo $website_status ? 'checked' : ''; ?>>
                                                         <label class="form-check-label">Bật website</label>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Favicon Website</label>
-                                                    <input type="file" name="favicon" class="form-control" accept="image/*">
-                                                    <?php if ($favicon): ?>
-                                                        <img src="<?php echo htmlspecialchars($favicon); ?>" alt="Favicon" style="max-width: 50px; margin-top: 10px;">
-                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Nút cuộn lên đầu trang</label>
@@ -450,7 +599,9 @@ $current_tab = $_GET['tab'] ?? 'general';
                                         </div>
                                         <!-- Tab Thông tin liên hệ -->
                                         <div class="tab-pane fade <?php echo $current_tab === 'contact' ? 'show active' : ''; ?>" id="contact">
-                                            <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addContactModal">Thêm liên hệ</button>
+                                            <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addContactModal">
+                                                <i class="fas fa-plus"></i> Thêm liên hệ
+                                            </button>
                                             <div class="table-responsive">
                                                 <table class="table table-hover">
                                                     <thead>
@@ -491,7 +642,9 @@ $current_tab = $_GET['tab'] ?? 'general';
                                         <div class="tab-pane fade <?php echo $current_tab === 'email' ? 'show active' : ''; ?>" id="email">
                                             <form method="POST">
                                                 <div class="form-header d-flex justify-content-end">
-                                                    <button type="submit" name="save_email" class="btn btn-primary">Lưu</button>
+<button type="submit" name="save_email" class="btn btn-primary">
+    <i class="fas fa-save"></i> Lưu
+</button>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>SMTP Host</label>
@@ -512,7 +665,7 @@ $current_tab = $_GET['tab'] ?? 'general';
                                                 <div class="form-group">
                                                     <label>SMTP Encryption</label>
                                                     <select name="smtp_encryption" class="form-control">
-                                                        <option value="none" <?php echo ($smtp['encryption'] ?? '') === 'none' ? 'selected' : ''; ?>>None</option>
+                                                        <option value="none" <?php echo ($smtp['encryption'] ?? '') === 'none' ? 'selected' : ''; ?>>Không mã hóa</option>
                                                         <option value="tls" <?php echo ($smtp['encryption'] ?? '') === 'tls' ? 'selected' : ''; ?>>TLS</option>
                                                         <option value="ssl" <?php echo ($smtp['encryption'] ?? '') === 'ssl' ? 'selected' : ''; ?>>SSL</option>
                                                     </select>
@@ -523,7 +676,9 @@ $current_tab = $_GET['tab'] ?? 'general';
                                         <div class="tab-pane fade <?php echo $current_tab === 'colors' ? 'show active' : ''; ?>" id="colors">
                                             <form method="POST">
                                                 <div class="form-header d-flex justify-content-end">
-                                                    <button type="submit" name="save_colors" class="btn btn-primary">Lưu</button>
+<button type="submit" name="save_colors" class="btn btn-primary">
+    <i class="fas fa-save"></i> Lưu
+</button>
                                                 </div>
                                                 <?php
                                                 $elements = ['body', 'menu', 'top', 'banner', 'title', 'footer', 'timeline'];
@@ -548,7 +703,7 @@ $current_tab = $_GET['tab'] ?? 'general';
                                         <div class="tab-pane fade <?php echo $current_tab === 'fonts' ? 'show active' : ''; ?>" id="fonts">
                                             <form method="POST">
                                                 <div class="form-header d-flex justify-content-end">
-                                                    <button type="submit" name="save_fonts" class="btn btn-primary">Lưu</button>
+                                                    <button type="submit" name="save_fonts" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
                                                 </div>
                                                 <?php
                                                 $font_families = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Palatino', 'Garamond', 'Public Sans'];
@@ -585,7 +740,7 @@ $current_tab = $_GET['tab'] ?? 'general';
                                         <div class="tab-pane fade <?php echo $current_tab === 'embed' ? 'show active' : ''; ?>" id="embed">
                                             <form method="POST">
                                                 <div class="form-header d-flex justify-content-end">
-                                                    <button type="submit" name="save_embed" class="btn btn-primary">Lưu</button>
+                                                    <button type="submit" name="save_embed" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Mã nhúng đầu trang (<head>)</label>
@@ -605,7 +760,7 @@ $current_tab = $_GET['tab'] ?? 'general';
                                         <div class="tab-pane fade <?php echo $current_tab === 'shipping' ? 'show active' : ''; ?>" id="shipping">
                                             <form method="POST" id="shipping-form">
                                                 <div class="form-header d-flex justify-content-end">
-                                                    <button type="submit" name="save_shipping" class="btn btn-primary">Lưu</button>
+                                                    <button type="submit" name="save_shipping" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
                                                 </div>
                                                 <!-- Khu vực nội thành -->
                                                 <div class="form-group">
@@ -712,6 +867,89 @@ $current_tab = $_GET['tab'] ?? 'general';
                                                 <div class="form-group">
                                                     <label>Miễn phí vận chuyển nếu đơn hàng lớn hơn (VNĐ)</label>
                                                     <input type="number" name="free_shipping_threshold" class="form-control" value="<?php echo htmlspecialchars($shipping_config['free_shipping_threshold'] ?? '0'); ?>" min="0">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- Tab Thanh toán -->
+                                        <div class="tab-pane fade <?php echo $current_tab === 'payment' ? 'show active' : ''; ?>" id="payment">
+                                            <form method="POST" enctype="multipart/form-data">
+                                                <div class="form-header d-flex justify-content-end">
+                                                    <button type="submit" name="save_payment" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Thanh toán khi nhận hàng (COD)</label>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" name="cod_enabled" class="form-check-input" <?php echo ($payment_config['cod'] ?? 0) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label">Bật COD</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Chuyển khoản ngân hàng</label>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" name="bank_transfer_enabled" class="form-check-input" <?php echo ($payment_config['bank_transfer']['enabled'] ?? 0) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label">Bật chuyển khoản ngân hàng</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Tên ngân hàng</label>
+                                                    <input type="text" name="bank_name" class="form-control" value="<?php echo htmlspecialchars($payment_config['bank_transfer']['bank_name'] ?? ''); ?>" placeholder="Nhập tên ngân hàng">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Số tài khoản</label>
+                                                    <input type="text" name="account_number" class="form-control" value="<?php echo htmlspecialchars($payment_config['bank_transfer']['account_number'] ?? ''); ?>" placeholder="Nhập số tài khoản">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Chủ tài khoản</label>
+                                                    <input type="text" name="account_holder" class="form-control" value="<?php echo htmlspecialchars($payment_config['bank_transfer']['account_holder'] ?? ''); ?>" placeholder="Nhập tên chủ tài khoản">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Nội dung chuyển khoản</label>
+                                                    <input type="text" name="transfer_content" class="form-control" value="<?php echo htmlspecialchars($payment_config['bank_transfer']['transfer_content'] ?? ''); ?>" placeholder="Nhập nội dung chuyển khoản">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Mã QR thanh toán</label>
+                                                    <input type="file" name="qr_code" class="form-control" accept="image/*">
+                                                    <?php if ($bank_transfer_qr_code): ?>
+                                                        <img src="<?php echo htmlspecialchars($bank_transfer_qr_code); ?>" alt="QR Code" class="qr-image mt-2">
+                                                    <?php endif; ?>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- Tab Cấu trúc dữ liệu -->
+                                        <div class="tab-pane fade <?php echo $current_tab === 'brand_data' ? 'show active' : ''; ?>" id="brand_data">
+                                            <?php
+                                            // Lấy dữ liệu hiện tại
+                                            $brand_data = json_decode(getSetting($pdo, 'brand_data', '{}'), true);
+                                            $brand_name = $brand_data['brand_name'] ?? '';
+                                            $logo = $brand_data['logo'] ?? '';
+                                            $address_json = $brand_data['address_json'] ?? '';
+                                            $created_at = $brand_data['created_at'] ?? date('Y-m-d H:i:s');
+                                            ?>
+
+                                            <form method="POST" enctype="multipart/form-data">
+                                                <div class="form-header d-flex justify-content-end">
+                                                    <button type="submit" name="save_brand_data" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Tên thương hiệu</label>
+                                                    <input type="text" name="brand_name" class="form-control" value="<?php echo htmlspecialchars($brand_name); ?>" placeholder="Nhập tên thương hiệu" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Logo thương hiệu</label>
+                                                    <input type="file" name="logo" class="form-control" accept="image/*">
+                                                    <?php if ($logo): ?>
+                                                        <img src="<?php echo htmlspecialchars($logo); ?>" alt="Logo" class="mt-2" style="max-width: 100px;">
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Mã dữ liệu địa chỉ (JSON)</label>
+                                                    <textarea name="address_json" class="form-control" rows="6" placeholder='{"@type": "PostalAddress", "streetAddress": "561A, Điện Biên Phủ, Phường 26, Quận Bình Thạnh", "addressLocality": "Quận Bình Thạnh", "addressRegion": "Thành Phố Hồ Chí Minh", "postalCode": "700000", "addressCountry": "VN"}' required><?php echo htmlspecialchars($address_json); ?></textarea>
+                                                    <small class="form-text text-muted">Nhập theo định dạng JSON của Schema.org (PostalAddress).</small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Ngày tạo</label>
+                                                    <input type="text" name="created_at" class="form-control" value="<?php echo htmlspecialchars($created_at); ?>" readonly>
+                                                    <small class="form-text text-muted">Ngày tạo sẽ được cập nhật khi lưu.</small>
                                                 </div>
                                             </form>
                                         </div>
@@ -1114,6 +1352,8 @@ $current_tab = $_GET['tab'] ?? 'general';
                 const $wardSelect = $cityGroup.find('.ward-select');
                 loadWards($(this), $wardSelect);
             });
+
+            
 
             // iZitoast notification
             <?php if (isset($_SESSION['toast_message']) && isset($_SESSION['toast_type'])): ?>

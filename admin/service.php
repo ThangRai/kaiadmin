@@ -330,9 +330,14 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                     <div class="card-body">
                                         <form method="POST" enctype="multipart/form-data">
                                             <div class="form-header d-flex justify-content-end">
-                                                <button type="submit" name="<?php echo $edit_service ? 'edit_service' : 'add_service'; ?>" class="btn btn-primary">Lưu</button>
-                                                <a href="service.php" class="btn btn-secondary ml-2">Hủy</a>
+                                                <button type="submit" name="<?php echo $edit_service ? 'edit_service' : 'add_service'; ?>" class="btn btn-primary">
+                                                    <i class="fas fa-save"></i> Lưu
+                                                </button>
+                                                <a href="service.php" class="btn btn-secondary ml-2">
+                                                    <i class="fas fa-times"></i> Hủy
+                                                </a>
                                             </div>
+
                                             <div class="row">
                                                 <!-- Left Column (3/12) -->
                                                 <div class="col-md-3">
@@ -450,7 +455,9 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                         <h4 class="card-title">Danh sách Dịch vụ</h4>
                                     </div>
                                     <div class="card-body">
-                                        <a href="?method=frm" class="btn btn-primary add-btn">Thêm Dịch vụ</a>
+                                        <a href="?method=frm" class="btn btn-primary add-btn">
+                                            <i class="fas fa-plus"></i> Thêm Dịch vụ
+                                        </a>
                                         <form method="GET" class="mb-4">
                                             <div class="row">
                                                 <div class="col-md-3">
@@ -482,11 +489,16 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-4">
                                                     <div class="form-group mt-4">
-                                                        <button type="submit" class="btn btn-primary">Tìm</button>
-                                                        <a href="service.php" class="btn btn-secondary">Reset</a>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="fas fa-search"></i> Tìm
+                                                        </button>
+                                                        <a href="service.php" class="btn btn-secondary">
+                                                            <i class="fas fa-sync-alt"></i> Reset
+                                                        </a>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </form>
@@ -536,9 +548,14 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                                                 </form>
                                                             </td>
                                                             <td>
-                                                                <a href="?method=frm&edit_id=<?php echo $service['id']; ?>" class="btn btn-sm btn-warning">Sửa</a>
-                                                                <a href="?delete_id=<?php echo $service['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                                                                <a href="?method=frm&edit_id=<?php echo $service['id']; ?>" class="btn btn-sm btn-warning" title="Sửa">
+                                                                    <i class="fas fa-edit"></i> Sửa
+                                                                </a>
+                                                                <a href="?delete_id=<?php echo $service['id']; ?>" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                                                    <i class="fas fa-trash-alt"></i> Xóa
+                                                                </a>
                                                             </td>
+
                                                             <td>
                                                                 <div class="display-position-list">
                                                                     <?php if ($service['display_position']): ?>

@@ -195,9 +195,9 @@ if (is_dir(__DIR__ . '/.git')) {
     <script>
         $(document).ready(function() {
             $('table').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Vietnamese.json"
-                }
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+            },
             });
 
             <?php if (isset($_SESSION['result_message']) && isset($_SESSION['result_type'])): ?>

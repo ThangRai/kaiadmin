@@ -252,9 +252,14 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                     <div class="card-body">
                                         <form method="POST" enctype="multipart/form-data" id="gallery-form">
                                             <div class="form-header d-flex justify-content-end">
-                                                <button type="submit" name="<?php echo $edit_gallery ? 'edit_gallery' : 'add_gallery'; ?>" class="btn btn-primary">Lưu</button>
-                                                <a href="gallery.php" class="btn btn-secondary ml-2">Hủy</a>
+                                                <button type="submit" name="<?php echo $edit_gallery ? 'edit_gallery' : 'add_gallery'; ?>" class="btn btn-primary">
+                                                    <i class="fas fa-save"></i> Lưu
+                                                </button>
+                                                <a href="gallery.php" class="btn btn-secondary ml-2">
+                                                    <i class="fas fa-times"></i> Hủy
+                                                </a>
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
@@ -305,7 +310,9 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                         <h4 class="card-title">Danh sách Thư viện Ảnh</h4>
                                     </div>
                                     <div class="card-body">
-                                        <a href="?method=frm" class="btn btn-primary add-btn">Thêm Thư viện Ảnh</a>
+                                        <a href="?method=frm" class="btn btn-primary add-btn">
+                                            <i class="fas fa-plus"></i> Thêm Thư viện Ảnh
+                                        </a>
                                         <form method="GET" class="mb-4">
                                             <div class="row">
                                                 <div class="col-md-3">
@@ -324,11 +331,16 @@ if ($method === 'frm' && isset($_GET['edit_id'])) {
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-4">
                                                     <div class="form-group mt-4">
-                                                        <button type="submit" class="btn btn-primary">Tìm</button>
-                                                        <a href="gallery.php" class="btn btn-secondary">Reset</a>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="fas fa-search"></i> Tìm
+                                                        </button>
+                                                        <a href="gallery.php" class="btn btn-secondary">
+                                                            <i class="fas fa-sync-alt"></i> Reset
+                                                        </a>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </form>

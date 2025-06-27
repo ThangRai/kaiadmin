@@ -1,5 +1,9 @@
 <?php
-// Không gọi session_start() ở đây
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng về trang login
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -10,7 +14,8 @@ if (!isset($_SESSION['user_id'])) {
 $fullname = $_SESSION['fullname'] ?? 'Người dùng';
 $avatar = $_SESSION['avatar'] ?? 'default.png';
 $email = $_SESSION['email'] ?? 'Chưa cập nhật';
-?>  
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -19,49 +24,73 @@ $email = $_SESSION['email'] ?? 'Chưa cập nhật';
     <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
-
-
     <!-- Fonts and icons -->
-     
     <script src="assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
-      WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-          families: [
-            "Font Awesome 5 Solid",
-            "Font Awesome 5 Regular",
-            "Font Awesome 5 Brands",
-            "simple-line-icons",
-          ],
-          urls: ["assets/css/fonts.min.css"],
-        },
-        active: function () {
-          sessionStorage.fonts = true;
-        },
-      });
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["assets/css/fonts.min.css"],
+            },
+            active: function() {
+                sessionStorage.fonts = true;
+            },
+        });
     </script>
-
     <!-- CSS Files -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/plugins.min.css" />
     <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
-
-    <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="assets/css/demo.css" />
+    <!-- iZitoast CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <style>
+        nav.navbar.navbar-header-left.navbar-expand-lg.navbar-form.nav-search.p-0.d-none.d-lg-flex {
+            width: 50%;
+        }
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        .search-results .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .search-results .result-item:hover {
+            background: #f8f9fa;
+        }
+        .search-results .result-item a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+        }
+        .search-results .no-results {
+            padding: 10px;
+            color: #666;
+        }
+    </style>
 </head>
-<style>
-    nav.navbar.navbar-header-left.navbar-expand-lg.navbar-form.nav-search.p-0.d-none.d-lg-flex {
-    width: 50%;
-}
-</style>
 <body>
     <div class="main-header">
         <div class="main-header-logo">
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
-                <a href="index.html" class="logo">
+                <a href="index.php" class="logo">
                     <img src="assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
                 </a>
                 <div class="nav-toggle">
@@ -82,16 +111,16 @@ $email = $_SESSION['email'] ?? 'Chưa cập nhật';
         <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
             <div class="container-fluid">
                 <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-                    <div class="input-group">
+                    <div class="input-group position-relative">
                         <div class="input-group-prepend">
                             <button type="submit" class="btn btn-search pe-1">
                                 <i class="fa fa-search search-icon"></i>
                             </button>
                         </div>
-                        <input type="text" placeholder="Tìm kiếm ..." class="form-control" />
+                        <input type="text" id="search-input" placeholder="Tìm kiếm ..." class="form-control" />
+                        <div id="search-results" class="search-results"></div>
                     </div>
                 </nav>
-
                 <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                     <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
@@ -100,7 +129,8 @@ $email = $_SESSION['email'] ?? 'Chưa cập nhật';
                         <ul class="dropdown-menu dropdown-search animated fadeIn">
                             <form class="navbar-left navbar-form nav-search">
                                 <div class="input-group">
-                                    <input type="text" placeholder="Tìm kiếm ..." class="form-control" />
+                                    <input type="text" id="mobile-search-input" placeholder="Tìm kiếm ..." class="form-control" />
+                                    <div id="mobile-search-results" class="search-results"></div>
                                 </div>
                             </form>
                         </ul>
@@ -205,7 +235,7 @@ $email = $_SESSION['email'] ?? 'Chưa cập nhật';
                                                 <span class="block"> Reza gửi tin nhắn cho bạn </span>
                                                 <span class="time">12 phút trước</span>
                                             </div>
-                                      </a>
+                                        </a>
                                         <a href="#">
                                             <div class="notif-icon notif-danger">
                                                 <i class="fa fa-heart"></i>
@@ -223,111 +253,129 @@ $email = $_SESSION['email'] ?? 'Chưa cập nhật';
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item topbar-icon dropdown hidden-caret">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-                            <i class="fas fa-layer-group"></i>
+                    <li class="nav-item topbar-icon hidden-caret">
+                        <a class="nav-link" href="#" id="btnFullscreen">
+                            <i class="fas fa-expand"></i> <!-- Icon full màn hình -->
                         </a>
-                        <div class="dropdown-menu quick-actions animated fadeIn">
-                            <div class="quick-actions-header">
-                                <span class="title mb-1">Hành động nhanh</span>
-                                <span class="subtitle op-7">Phím tắt</span>
-                            </div>
-                            <div class="quick-actions-scroll scrollbar-outer">
-                                <div class="quick-actions-items">
-                                    <div class="row m-0">
-                                        <a class="col-6 col-md-4 p-0" href="#">
-                                            <div class="quick-actions-item">
-                                                <div class="avatar-item bg-danger rounded-circle">
-                                                    <i class="far fa-calendar-alt"></i>
-                                                </div>
-                                                <span class="text">Lịch</span>
-                                            </div>
-                                        </a>
-                                        <a class="col-6 col-md-4 p-0" href="#">
-                                            <div class="quick-actions-item">
-                                                <div class="avatar-item bg-warning rounded-circle">
-                                                    <i class="fas fa-map"></i>
-                                                </div>
-                                                <span class="text">Bản đồ</span>
-                                            </div>
-                                        </a>
-                                        <a class="col-6 col-md-4 p-0" href="#">
-                                            <div class="quick-actions-item">
-                                                <div class="avatar-item bg-info rounded-circle">
-                                                    <i class="fas fa-file-excel"></i>
-                                                </div>
-                                                <span class="text">Báo cáo</span>
-                                            </div>
-                                        </a>
-                                        <a class="col-6 col-md-4 p-0" href="#">
-                                            <div class="quick-actions-item">
-                                                <div class="avatar-item bg-success rounded-circle">
-                                                    <i class="fas fa-envelope"></i>
-                                                </div>
-                                                <span class="text">Email</span>
-                                            </div>
-                                        </a>
-                                        <a class="col-6 col-md-4 p-0" href="#">
-                                            <div class="quick-actions-item">
-                                                <div class="avatar-item bg-primary rounded-circle">
-                                                    <i class="fas fa-file-invoice-dollar"></i>
-                                                </div>
-                                                <span class="text">Hóa đơn</span>
-                                            </div>
-                                        </a>
-                                        <a class="col-6 col-md-4 p-0" href="#">
-                                            <div class="quick-actions-item">
-                                                <div class="avatar-item bg-secondary rounded-circle">
-                                                    <i class="fas fa-credit-card"></i>
-                                                </div>
-                                                <span class="text">Thanh toán</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </li>
-                    <li class="nav-item topbar-user dropdown hidden-caret">
-    <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-        <div class="avatar-sm">
-            <img src="<?php echo $avatar; ?>" alt="avatar" class="avatar-img rounded-circle" />
-        </div>
-        <span class="profile-username">
-            <span class="op-7">Hi !</span>
-            <span class="fw-bold"><?php echo $fullname; ?></span>
-        </span>
-    </a>
-    <ul class="dropdown-menu dropdown-user animated fadeIn">
-        <div class="dropdown-user-scroll scrollbar-outer">
-            <li>
-                <div class="user-box">
-                    <div class="avatar">
-                        <img src="<?php echo $avatar; ?>" alt="avatar" class="avatar-img rounded" style="width: 40px; height: auto;" />
-                    </div>
-                    <div class="u-text">
-                        <h4><?php echo $fullname; ?></h4>
-                        <p class="text-muted"><?php echo $email; ?></p>
-                        <a href="profile.php" class="btn btn-xs btn-secondary btn-sm">Xem hồ sơ</a>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="profile.php">Hồ sơ của tôi</a>
-                <!-- <a class="dropdown-item" href="#">Số dư của tôi</a>
-                <a class="dropdown-item" href="#">Hộp thư đến</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Cài đặt tài khoản</a>
-                <div class="dropdown-divider"></div> -->
-                <a class="dropdown-item" href="logout.php">Đăng xuất</a>
-            </li>
-        </div>
-    </ul>
-</li>
 
+                    <li class="nav-item topbar-user dropdown hidden-caret">
+                        <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                            <div class="avatar-sm">
+                                <img src="<?php echo $avatar; ?>" alt="avatar" class="avatar-img rounded-circle" />
+                            </div>
+                            <span class="profile-username">
+                                <span class="op-7">Hi !</span>
+                                <span class="fw-bold"><?php echo $fullname; ?></span>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user animated fadeIn">
+                            <div class="dropdown-user-scroll scrollbar-outer">
+                                <li>
+                                    <div class="user-box">
+                                        <div class="avatar">
+                                            <img src="<?php echo $avatar; ?>" alt="avatar" class="avatar-img rounded" style="width: 40px; height: auto;" />
+                                        </div>
+                                        <div class="u-text">
+                                            <h4><?php echo $fullname; ?></h4>
+                                            <p class="text-muted"><?php echo $email; ?></p>
+                                            <!-- <a href="profile.php" class="btn btn-xs btn-secondary btn-sm">Xem hồ sơ</a> -->
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="profile.php">
+                                        <i class="fas fa-user"></i> Hồ sơ của tôi
+                                    </a>
+                                    <a class="dropdown-item" href="logout.php">
+                                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                    </a>
+                                </li>
+
+                            </div>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </nav>
         <!-- End Navbar -->
     </div>
+
+    <!-- Core JS Files -->
+    <script src="assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/core/popper.min.js"></script>
+    <!-- <script src="assets/js/core/bootstrap.min.js"></script> -->
+    <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="assets/js/kaiadmin.min.js"></script>
+    <!-- iZitoast JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Live search cho desktop
+            $('#search-input').on('input', function() {
+                let query = $(this).val().trim();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: 'search.php',
+                        method: 'GET',
+                        data: { q: query },
+                        success: function(response) {
+                            $('#search-results').html(response).show();
+                        },
+                        error: function() {
+                            $('#search-results').html('<div class="no-results">Lỗi khi tìm kiếm!</div>').show();
+                        }
+                    });
+                } else {
+                    $('#search-results').hide();
+                }
+            });
+
+            // Live search cho mobile
+            $('#mobile-search-input').on('input', function() {
+                let query = $(this).val().trim();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: 'search.php',
+                        method: 'GET',
+                        data: { q: query },
+                        success: function(response) {
+                            $('#mobile-search-results').html(response).show();
+                        },
+                        error: function() {
+                            $('#mobile-search-results').html('<div class="no-results">Lỗi khi tìm kiếm!</div>').show();
+                        }
+                    });
+                } else {
+                    $('#mobile-search-results').hide();
+                }
+            });
+
+            // Ẩn kết quả khi click ra ngoài
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.input-group').length) {
+                    $('#search-results, #mobile-search-results').hide();
+                }
+            });
+        });
+    </script>
+    <!-- Nút full màn hình  -->
+    <script>
+    document.getElementById('btnFullscreen').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
+<?php ob_end_flush(); ?>

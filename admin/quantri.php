@@ -267,6 +267,8 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
     <!-- Bootstrap Switch CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+    <script src="ckeditor/ckeditor.js"></script>
+
     <style>
         .nav-tabs .nav-link.active {
             background-color: #fff;
@@ -392,9 +394,14 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                                                 <!-- User Input Fields -->
                                                 <div class="col-md-8">
                                                     <div class="form-header d-flex justify-content-end">
-                                                        <button type="submit" name="<?php echo $active === 'edit' ? 'edit_user' : 'add_user'; ?>" class="btn btn-primary">Lưu</button>
-                                                        <a href="quantri.php" class="btn btn-secondary ml-2">Hủy</a>
+                                                        <button type="submit" name="<?php echo $active === 'edit' ? 'edit_user' : 'add_user'; ?>" class="btn btn-primary">
+                                                            <i class="fas fa-save"></i> Lưu
+                                                        </button>
+                                                        <a href="quantri.php" class="btn btn-secondary ml-2">
+                                                            <i class="fas fa-times"></i> Hủy
+                                                        </a>
                                                     </div>
+
                                                     <div class="form-group">
                                                         <label>Tên đăng nhập</label>
                                                         <input type="text" name="username" class="form-control" value="<?php echo $edit_user ? htmlspecialchars($edit_user['username']) : ''; ?>" required>
@@ -488,13 +495,18 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                     </div>
                     <div class="form-group">
                         <label>Nội dung</label>
-                        <textarea name="content" class="form-control" rows="5" required></textarea>
+                        <textarea name="content" id="content" class="form-control" rows="5" required></textarea>
                     </div>
+
                     <div class="form-header d-flex justify-content-end">
                         <button type="submit" name="send_email" class="btn btn-primary">Gửi</button>
                         <a href="quantri.php" class="btn btn-secondary ml-2">Hủy</a>
                     </div>
                 </form>
+                <script>
+                    // CKEDITOR.replace('description');
+                    CKEDITOR.replace('content');
+                </script>
             </div>
         </div>
     </div>
@@ -507,9 +519,14 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                                     </div>
                                     <div class="card-body">
                                         <div class="d-flex justify-content-end mb-3">
-                                            <a href="?active=add" class="btn btn-primary mr-2">Thêm tài khoản</a>
-                                            <a href="?active=mail" class="btn btn-info">Gửi mail</a>
+                                            <a href="?active=add" class="btn btn-primary mr-2">
+                                                <i class="fas fa-user-plus"></i> Thêm tài khoản
+                                            </a>
+                                            <a href="?active=mail" class="btn btn-info">
+                                                <i class="fas fa-envelope"></i> Gửi mail
+                                            </a>
                                         </div>
+
                                         <div class="table-responsive">
                                             <table class="table table-hover">
                                                 <thead>
@@ -521,7 +538,7 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                                                         <th>Email</th>
                                                         <th>Ngày sinh</th>
                                                         <th>Quyền</th>
-                                                        <th>Tác giả</th>
+                                                        <!-- <th>Tác giả</th> -->
                                                         <th>Trạng thái</th>
                                                         <th>Thao tác</th>
                                                     </tr>
@@ -536,7 +553,7 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                                                             <td><?php echo htmlspecialchars($user['email']); ?></td>
                                                             <td><?php echo htmlspecialchars($user['dob']); ?></td>
                                                             <td><?php echo htmlspecialchars($user['role_name']); ?></td>
-                                                            <td><?php echo htmlspecialchars($user['fullname']); ?></td>
+                                                            <!-- <td><?php echo htmlspecialchars($user['fullname']); ?></td> -->
                                                             <td>
                                                                 <form method="POST" action="quantri.php">
                                                                     <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
@@ -545,9 +562,14 @@ $active = isset($_GET['active']) ? $_GET['active'] : 'list';
                                                                 </form>
                                                             </td>
                                                             <td>
-                                                                <a href="?active=edit&edit_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-warning">Sửa</a>
-                                                                <a href="?delete_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                                                                <a href="?active=edit&edit_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-warning" title="Sửa">
+                                                                    <i class="fas fa-edit"></i> Sửa
+                                                                </a>
+                                                                <a href="?delete_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                                                    <i class="fas fa-trash-alt"></i> Xoá
+                                                                </a>
                                                             </td>
+
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
